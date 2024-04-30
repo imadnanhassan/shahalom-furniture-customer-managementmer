@@ -1,20 +1,21 @@
-import React, { useState } from 'react'
+import React from 'react'
 import 'react-quill/dist/quill.snow.css'
 import 'filepond/dist/filepond.min.css'
 
 import { GoHome } from 'react-icons/go'
 import { useSelector } from 'react-redux'
-import { FilePond, registerPlugin } from 'react-filepond'
+import { registerPlugin } from 'react-filepond'
 import 'filepond/dist/filepond.min.css'
 import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import { useForm } from 'react-hook-form'
+import { useAddCustomerMutation } from '../../../redux/features/customer/customerApi'
 
 // Register FilePond plugins if needed
 registerPlugin(/* plugins */)
 export default function AddCustomer() {
-  const [uploadedFiles, setUploadedFiles] = useState([])
-  const [v, setV] = useState();
+  // const [uploadedFiles, setUploadedFiles] = useState([])
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
+  const [addCustomer] = useAddCustomerMutation()
 
   const {
     register,
@@ -30,15 +31,26 @@ export default function AddCustomer() {
     { title: 'Customer Add ' },
   ]
 
-  // Update state with uploaded files
-  const handleFileUpdate = files => {
-    setUploadedFiles(files)
-  }
-
   const handleOnSubmit = async data => {
     try {
+      const formData = new FormData()
+
+      // Append other form data fields
+      formData.append('invoice_number', data.invoice_number)
+      formData.append('product_details', data.product_details)
+      formData.append('name', data.name)
+      formData.append('location', data.location)
+      formData.append('number', data.number)
+
+      // Append uploaded file(s)
+      for (let i = 0; i < data.images.length; i++) {
+        formData.append('images[]', data.images[i])
+      }
+
+      const res = await addCustomer(formData)
+      
       console.log(data)
-      console.log(v[0].name)
+      console.log(res)
     } catch (error) {
       console.error(error)
     }
@@ -67,7 +79,7 @@ export default function AddCustomer() {
                   htmlFor="invoicenumber"
                   className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
                 >
-                  Invoice Id
+                  Invoice Number
                 </label>
                 <input
                   type="text"
@@ -115,22 +127,16 @@ export default function AddCustomer() {
                   htmlFor="file"
                   className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
                 >
-                  Invoice Id
+                  Images
                 </label>
                 <input
-                  multiple
                   type="file"
-                  id='file'
-                  onChange={e => {
-                    setV(e.target.files)
-                  }}
-                  files={v}
+                  {...register('images', { required: 'Please select file(s)' })}
+                  multiple
                 />
               </div>
-              {errors.invoice_number && (
-                <span className="text-red-500">
-                  {errors.invoice_number?.message}
-                </span>
+              {errors.images && (
+                <span className="text-red-500">{errors.images?.message}</span>
               )}
             </div>
           </div>
@@ -140,7 +146,7 @@ export default function AddCustomer() {
           {/* select 2 */}
           <div className="px-9">
             <div className="lg:flex gap-3 items-center">
-              <div class="w-full mr:auto ml:auto lg:mt-0 md:mt-2 mt-4 sm:mt-3">
+              <div className="w-full mr:auto ml:auto lg:mt-0 md:mt-2 mt-4 sm:mt-3">
                 <div className="mb-4 flex gap-4">
                   <div className="flex-1">
                     <label
@@ -222,12 +228,12 @@ export default function AddCustomer() {
 
           {/* file upload */}
 
-          <div className=" px-5 py-5">
-            <div class="lg:flex gap-3 items-center px-4">
-              <div class=" w-full mr:auto ml:auto">
+          {/* <div className=" px-5 py-5">
+            <div className="lg:flex gap-3 items-center px-4">
+              <div className=" w-full mr:auto ml:auto">
                 <label
                   for="productCategory"
-                  class="block text-sm mb-2 font-medium text-gray-700"
+                  className="block text-sm mb-2 font-medium text-gray-700"
                 >
                   Upload a Thumbnail
                 </label>
@@ -237,9 +243,8 @@ export default function AddCustomer() {
                     allowMultiple={true}
                     maxFiles={4}
                     onupdatefiles={handleFileUpdate}
-                    labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                    labelIdle='Drag & Drop your files or <span className="filepond--label-action">Browse</span>'
                   />
-                  {/* Render preview images */}
                   <div className="flex gap-2">
                     {uploadedFiles.map(file => (
                       <img
@@ -257,7 +262,7 @@ export default function AddCustomer() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <button
             type="submit"
