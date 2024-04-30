@@ -14,7 +14,14 @@ export const customerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.customer],
     }),
+    //get all customer
+    getCustomers: build.query({
+      query: () => ({
+        url: `${CUSTOMER_URL}`,
+      }),
+      invalidatesTags: [tagTypes.customer],
+    }),
   }),
 })
 
-export const { useAddCustomerMutation } = customerApi
+export const { useAddCustomerMutation, useGetCustomersQuery } = customerApi

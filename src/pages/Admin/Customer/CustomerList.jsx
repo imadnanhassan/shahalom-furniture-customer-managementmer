@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import Button from '../../../common/Button/Button'
 import Pagination from '../../../common/Pagination/Pagination'
+import { useGetCustomersQuery } from '../../../redux/features/customer/customerApi'
 
 export default function CustomerList() {
   const [data, setData] = useState([])
@@ -20,6 +21,8 @@ export default function CustomerList() {
   const { selectAll, checkboxes } = useSelector(state => state.checkBox)
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
   const dispatch = useDispatch()
+
+  const {data: customers, isLoading} = useGetCustomersQuery()
   const handleHeaderCheckboxChange = () => {
     dispatch(toggleSelectAll(!selectAll))
   }
@@ -190,6 +193,8 @@ export default function CustomerList() {
   useEffect(() => {
     setData(tableData)
   }, [])
+
+  console.log(customers)
 
   return (
     <section
