@@ -35,6 +35,8 @@ import HomePage from '../pages/Frontend/Home/HomePage'
 import Brand from '../pages/Admin/Products/Brand/Brand'
 import AddValue from '../pages/Admin/Products/Attributes/AddValue'
 import ForgotPassword from '../pages/Admin/Auth/ForgotPassword'
+import CustomerList from '../pages/Admin/Customer/CustomerList'
+import AddCustomer from '../pages/Admin/Customer/AddCustomer'
 
 const router = createBrowserRouter([
   {
@@ -70,12 +72,13 @@ const router = createBrowserRouter([
       { path: 'dashboard/blog-category', element: <BlogCategories /> },
       { path: 'dashboard/add-post', element: <BlogAdd /> },
       { path: 'dashboard/blog-tag', element: <BlogTags /> },
+      { path: 'dashboard/all-customers', element: <CustomerList /> },
+      { path: 'dashboard/add-customer', element: <AddCustomer /> },
       { path: 'dashboard/banner', element: <Banner /> },
       { path: 'dashboard/uploaded-files', element: <UploadedFiles /> },
       { path: 'dashboard/campaign-add', element: <CampaignAdd /> },
       { path: 'dashboard/campaign-list', element: <CampaignList /> },
       { path: 'dashboard/settings', element: <Settings /> },
-
       { path: 'dashboard/theme', element: <Theme /> },
       { path: 'dashboard/order-tracking', element: <OrderTracking /> },
     ],
