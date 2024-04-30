@@ -7,12 +7,20 @@ import { useSelector } from 'react-redux'
 import { FilePond, registerPlugin } from 'react-filepond'
 import 'filepond/dist/filepond.min.css'
 import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
+import { useForm } from 'react-hook-form'
 
 // Register FilePond plugins if needed
 registerPlugin(/* plugins */)
 export default function AddCustomer() {
   const [uploadedFiles, setUploadedFiles] = useState([])
+  const [v, setV] = useState();
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
 
   // Breadcrumbs
   const pageTitle = 'Customer Add'
@@ -27,6 +35,15 @@ export default function AddCustomer() {
     setUploadedFiles(files)
   }
 
+  const handleOnSubmit = async data => {
+    try {
+      console.log(data)
+      console.log(v[0].name)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <section
       className={`main-container ${isDarkMode ? 'bg-darkColorBody' : 'bg-lightColorBody'}`}
@@ -35,7 +52,10 @@ export default function AddCustomer() {
       <Breadcrumbs title={pageTitle} breadcrumbs={productLinks} />
 
       {/* Add Product field */}
-      <div className="lg:flex gap-5 pb-5">
+      <form
+        onSubmit={handleSubmit(handleOnSubmit)}
+        className="lg:flex gap-5 pb-5"
+      >
         <div
           className={`lg:w-[65%]  w-full py-5 rounded ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText '}`}
         >
@@ -44,19 +64,27 @@ export default function AddCustomer() {
             <div className="mb-4 flex gap-4">
               <div className="flex-1">
                 <label
-                  htmlFor="invoiceid"
+                  htmlFor="invoicenumber"
                   className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
                 >
                   Invoice Id
                 </label>
                 <input
                   type="text"
-                  id="invoiceid"
-                  name="invoice_id"
-                  placeholder="Enter Invoice Id"
+                  id="invoicenumber"
+                  name="invoice_number"
+                  placeholder="Enter Invoice Number"
                   className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                  {...register('invoice_number', {
+                    required: 'Must be provide Invoice Number',
+                  })}
                 />
               </div>
+              {errors.invoice_number && (
+                <span className="text-red-500">
+                  {errors.invoice_number?.message}
+                </span>
+              )}
             </div>
 
             <div className="mb-4">
@@ -70,21 +98,41 @@ export default function AddCustomer() {
                 rows="4"
                 id="productdetails"
                 className={`mt-1 p-3  border block w-full shadow-sm sm:text-sm  rounded-md  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText focus:outline-none' : 'text-gray-700 focus:outline-none focus:ring-indigo-500 focus:border-primaryColor hover:border-gray-400 border-gray-300'}`}
+                {...register('product_details', {
+                  required: 'Product Details is requied!',
+                })}
               ></textarea>
+              {errors.product_details && (
+                <span className="text-red-500">
+                  {errors.product_details?.message}
+                </span>
+              )}
             </div>
-            {/* <div className="mb-4">
-              <label
-                className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
-              >
-                Product Description
-              </label>
-              <ReactQuill
-                value={description}
-                onChange={handleDescriptionChange}
-                theme="snow"
-                className={`mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md ${isDarkMode ? '' : ''}`}
-              />
-            </div> */}
+
+            <div className="mb-4 flex gap-4">
+              <div className="flex-1">
+                <label
+                  htmlFor="file"
+                  className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+                >
+                  Invoice Id
+                </label>
+                <input
+                  multiple
+                  type="file"
+                  id='file'
+                  onChange={e => {
+                    setV(e.target.files)
+                  }}
+                  files={v}
+                />
+              </div>
+              {errors.invoice_number && (
+                <span className="text-red-500">
+                  {errors.invoice_number?.message}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -107,7 +155,15 @@ export default function AddCustomer() {
                       name="name"
                       placeholder="Enter Name"
                       className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                      {...register('name', {
+                        required: 'Name is requied!',
+                      })}
                     />
+                    {errors.name && (
+                      <span className="text-red-500">
+                        {errors.name?.message}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="mb-4 flex gap-4">
@@ -124,7 +180,15 @@ export default function AddCustomer() {
                       name="location"
                       placeholder="Enter Location"
                       className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                      {...register('location', {
+                        required: 'Location is requied!',
+                      })}
                     />
+                    {errors.location && (
+                      <span className="text-red-500">
+                        {errors.location?.message}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="mb-4 flex gap-4">
@@ -141,27 +205,21 @@ export default function AddCustomer() {
                       name="number"
                       placeholder="Enter Number"
                       className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                      {...register('number', {
+                        required: 'Number is requied!',
+                      })}
                     />
+                    {errors.number && (
+                      <span className="text-red-500">
+                        {errors.number?.message}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* publish date product color */}
-          {/* <div className=" px-5 py-5">
-            <div class="lg:flex gap-3 items-center px-4">
-              <div class=" w-full mr:auto ml:auto">
-                <label
-                  for="productCategory"
-                  class="block text-sm font-medium text-gray-700"
-                >
-                  Published Date and Time
-                </label>
-                <AddProductDatePicker />
-              </div>
-            </div>
-          </div> */}
           {/* file upload */}
 
           <div className=" px-5 py-5">
@@ -200,8 +258,15 @@ export default function AddCustomer() {
               </div>
             </div>
           </div>
+
+          <button
+            type="submit"
+            className="bg-primaryColor py-3 px-4 rounded text-white text-[14px] flex gap-2 items-center"
+          >
+            Submit
+          </button>
         </div>
-      </div>
+      </form>
     </section>
   )
 }

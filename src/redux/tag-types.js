@@ -1,7 +1,6 @@
 export const tagTypes = {
-    login: "login",
+  login: 'login',
+  customer: 'customer',
 }
 
-export const tagTypesList = [
-    tagTypes.login,
-]
+export const tagTypesList = [tagTypes.login, tagTypes.customer]
