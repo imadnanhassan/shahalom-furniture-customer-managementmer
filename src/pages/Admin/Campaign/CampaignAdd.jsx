@@ -416,6 +416,7 @@ export default function CampaignAdd() {
   const handleTypeChange = e => {
     setDiscountType(e.target.value)
   }
+  
   return (
     <section
       className={`main-container ${isDarkMode ? 'bg-darkColorBody' : 'bg-lightColorBody'}`}

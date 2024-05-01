@@ -1,6 +1,6 @@
+import { useState } from 'react'
 import { RiDeleteBin7Line } from 'react-icons/ri'
 import { FiEdit, FiEye } from 'react-icons/fi'
-import { useEffect, useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { useDispatch, useSelector } from 'react-redux'
 import { GoHome } from 'react-icons/go'
@@ -13,16 +13,32 @@ import { Link } from 'react-router-dom'
 import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import Button from '../../../common/Button/Button'
 import Pagination from '../../../common/Pagination/Pagination'
-import { useGetCustomersQuery } from '../../../redux/features/customer/customerApi'
+import {
+  useDeleteCustomerMutation,
+  useGetCustomersQuery,
+} from '../../../redux/features/customer/customerApi'
+import SingleCustomerDetails from './SingleCustomerDetails'
 
 export default function CustomerList() {
-  const [data, setData] = useState([])
+  const [customer, setCustomer] = useState({})
+  const [searchValue, setSearchValue] = useState('')
+  const [page, setPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedId, setSelectedId] = useState(null)
 
   const { selectAll, checkboxes } = useSelector(state => state.checkBox)
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
   const dispatch = useDispatch()
+  const query = {}
+  query['page'] = page
 
-  const {data: customers, isLoading} = useGetCustomersQuery()
+  query['search'] = searchValue
+
+  query["perPage"] = itemsPerPage;
+
+  const { data: getData } = useGetCustomersQuery(query)
+  const [deleteCustomer] = useDeleteCustomerMutation()
   const handleHeaderCheckboxChange = () => {
     dispatch(toggleSelectAll(!selectAll))
   }
@@ -31,170 +47,28 @@ export default function CustomerList() {
     dispatch(toggleCheckbox(index))
   }
 
-  // table data
-  const tableData = [
-    {
-      id: 1,
-      title: 'We Protecting Your Digital Assets',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Elon Mask',
-      author: 'Elon Mask',
-      category: 'Blog',
-      shortDescription: 'Lorem ipsum dolor sit amet consectetur!',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 1, data: 'Nice to have' }],
-      published: '28 Mar 2023',
-    },
-    {
-      id: 2,
-      title: 'The Future of Artificial Intelligence',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Ada Lovelace',
-      author: 'Ada Lovelace',
-      category: 'Article',
-      shortDescription:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 2, data: 'Interesting topic' }],
-      published: '29 Mar 2023',
-    },
-    {
-      id: 3,
-      title: 'Innovations in Renewable Energy',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Nikola Tesla',
-      author: 'Nikola Tesla',
-      category: 'Article',
-      shortDescription:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis, voluptatibus!',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 3, data: 'Great insights!' }],
-      published: '30 Mar 2023',
-    },
-    {
-      id: 4,
-      title: 'The Impact of Climate Change on Biodiversity',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Jane Goodall',
-      author: 'Jane Goodall',
-      category: 'Blog',
-      shortDescription:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, natus.',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 4, data: 'Important topic!' }],
-      published: '31 Mar 2023',
-    },
-    {
-      id: 5,
-      title: 'Advancements in Medical Technology',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Marie Curie',
-      author: 'Marie Curie',
-      category: 'Article',
-      shortDescription:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, aut.',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 5, data: 'Fascinating read!' }],
-      published: '1 Apr 2023',
-    },
-    {
-      id: 6,
-      title: 'Space Exploration: Past, Present, and Future',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Neil Armstrong',
-      author: 'Neil Armstrong',
-      category: 'Blog',
-      shortDescription:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, expedita.',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 6, data: 'Inspiring article!' }],
-      published: '2 Apr 2023',
-    },
-    {
-      id: 7,
-      title: 'The Role of Artificial Intelligence in Healthcare',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Alan Turing',
-      author: 'Alan Turing',
-      category: 'Article',
-      shortDescription:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, dolor.',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 7, data: 'Informative content!' }],
-      published: '3 Apr 2023',
-    },
-    {
-      id: 8,
-      title: 'Exploring Renewable Energy Sources',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Thomas Edison',
-      author: 'Thomas Edison',
-      category: 'Article',
-      shortDescription:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, quam.',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 8, data: 'Well researched!' }],
-      published: '4 Apr 2023',
-    },
-    {
-      id: 9,
-      title: 'The Future of Quantum Computing',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Richard Feynman',
-      author: 'Richard Feynman',
-      category: 'Article',
-      shortDescription:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo, molestias!',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 9, data: 'Mind-blowing insights!' }],
-      published: '5 Apr 2023',
-    },
-    {
-      id: 10,
-      title: 'Exploring the Universe: A Journey Through Space',
-      thumbnail:
-        'https://react.spruko.com/synto-js/preview/assets/11-70a2cfce.png',
-      customerName: 'Carl Sagan',
-      author: 'Carl Sagan',
-      category: 'Article',
-      shortDescription:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, vero!',
-      status: true,
-      tag: 'tag',
-      comments: [{ id: 10, data: 'Amazing insights!' }],
-      published: '6 Apr 2023',
-    },
-  ]
-
   const pageTitle = 'Customer List'
   const productLinks = [
     { title: <GoHome />, link: '/dashboard' },
     { title: 'Customer list' },
   ]
 
-  useEffect(() => {
-    setData(tableData)
-  }, [])
+  const handleDeleteCustomer = async id => {
+    const res = await deleteCustomer(id)
+    console.log(res)
+  }
 
-  console.log(customers)
+  // open moda
+  const openModal = id => {
+    setSelectedId(id)
+    setModalOpen(true)
+  }
+  // close modal
+  const closeModal = () => {
+    setModalOpen(false)
+    setSelectedId(null)
+  }
+
 
   return (
     <section
@@ -215,8 +89,10 @@ export default function CustomerList() {
             >
               <input
                 type="search"
-                className={`py-3 pl-4 pr-2 bg-transparent w-full focus:outline-none cursor-pointer ${isDarkMode ? 'placeholder:text-slate-400' : 'placeholder:text-textColor'}`}
+                className={`py-3 pl-4 pr-2 bg-transparent w-full focus:outline-none ${isDarkMode ? 'placeholder:text-slate-400' : 'placeholder:text-textColor'}`}
                 placeholder="Search Customer"
+                onChange={e => setSearchValue(e.target.value)}
+                value={searchValue}
               />
               <button className="btn mt-0 rounded-[0px] rounded-r-md px-3">
                 <i className="fa-solid fa-magnifying-glass" />
@@ -298,7 +174,7 @@ export default function CustomerList() {
               </thead>
 
               <tbody className="divide-y divide-gray-200">
-                {data.map((item, index) => (
+                {getData?.customers?.map((item, index) => (
                   <tr key={item.id}>
                     <td className="p-2">
                       <input
@@ -312,7 +188,35 @@ export default function CustomerList() {
                       <h6
                         className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                       >
-                        {item.title}
+                        {item?.name}
+                      </h6>
+                    </td>
+                    <td className="border-l pl-2 py-4 whitespace-nowrap">
+                      <h6
+                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                      >
+                        {item?.number}
+                      </h6>
+                    </td>
+                    <td className="border-l pl-2 py-4 whitespace-nowrap">
+                      <h6
+                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                      >
+                        {item?.location}
+                      </h6>
+                    </td>
+                    <td className="border-l pl-2 py-4 whitespace-nowrap">
+                      <h6
+                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                      >
+                        {item?.invoice_number}
+                      </h6>
+                    </td>
+                    <td className="border-l pl-2 py-4 whitespace-nowrap">
+                      <h6
+                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                      >
+                        {item?.product_details}
                       </h6>
                     </td>
                     <td
@@ -321,33 +225,12 @@ export default function CustomerList() {
                       <div
                         className={`w-[50px] h-[50px] mx-auto rounded-md p-2 ${isDarkMode ? 'bg-[#131A26]' : 'bg-[#f2f2f3]'}`}
                       >
-                        <img src={item.thumbnail} alt="" className="w-full" />
+                        <img
+                          src={`http://127.0.0.1:8000/storage/customer/${item?.images[0].name}`}
+                          alt=""
+                          className="w-full"
+                        />
                       </div>
-                    </td>
-                    <td className="border-l pl-2 py-4 whitespace-nowrap">
-                      <h6
-                        className={`text-[15px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
-                      >
-                        {item.author}
-                      </h6>
-                    </td>
-                    <td
-                      className={`border-l pl-2 py-4 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
-                    >
-                      <h5
-                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
-                      >
-                        {item.category}
-                      </h5>
-                    </td>
-                    <td
-                      className={`border-l pl-2 py-4 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
-                    >
-                      <p
-                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
-                      >
-                        {item.shortDescription}
-                      </p>
                     </td>
                     <td
                       className={`border-l pl-2 py-2 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
@@ -355,29 +238,38 @@ export default function CustomerList() {
                       <span
                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${item.status ? 'bg-[#E8F9EF] text-[#22c55e]' : 'bg-gray-100 text-gray-400'}`}
                       >
-                        {item.status ? 'Published' : 'Unpublished'}
+                        {item?.status ? 'Published' : 'Unpublished'}
                       </span>
                     </td>
-                    <td
-                      className={`border-l pl-2 py-4 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
-                    >
-                      <span
-                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
-                      >
-                        {item.published}
-                      </span>
-                    </td>
-
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <button className="focus:outline-none transition-all duration-100 p-2 rounded-full bg-[#eab3081a] hover:bg-[#eab308] text-[#eab308] hover:text-lightColor">
+                        <button
+                          onClick={() => {
+                            setCustomer(item)
+                            openModal(item?.id)
+                          }}
+                          className="focus:outline-none transition-all duration-100 p-2 rounded-full bg-[#eab3081a] hover:bg-[#eab308] text-[#eab308] hover:text-lightColor"
+                        >
                           <FiEye className="text-[12px]" />
                         </button>
 
-                        <button className="focus:outline-none transition-all duration-100 p-2 rounded-full bg-[#60a5fa1a] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-lightColor">
+                        <SingleCustomerDetails
+                          isOpen={modalOpen}
+                          onClose={closeModal}
+                          selectedId={selectedId}
+                          customer={customer}
+                        />
+
+                        <Link
+                          to={`/dashboard/update-customer/${item?.id}`}
+                          className="focus:outline-none transition-all duration-100 p-2 rounded-full bg-[#60a5fa1a] text-[#60a5fa] hover:bg-[#60a5fa] hover:text-lightColor"
+                        >
                           <FiEdit className=" text-[12px] " />
-                        </button>
-                        <button className="focus:outline-none transition-all duration-300 p-2 rounded-full bg-[#f43f5e1a] text-[#f43f5e] hover:bg-[#f43f5e] hover:text-lightColor">
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteCustomer(item?.id)}
+                          className="focus:outline-none transition-all duration-300 p-2 rounded-full bg-[#f43f5e1a] text-[#f43f5e] hover:bg-[#f43f5e] hover:text-lightColor"
+                        >
                           <RiDeleteBin7Line className="text-[12px]" />
                         </button>
                       </div>
@@ -389,7 +281,14 @@ export default function CustomerList() {
           </div>
         </div>
 
-        <Pagination />
+        <Pagination
+          currentPage={page}
+          totalDatas={getData?.count}
+          itemsPerPage={itemsPerPage}
+          setItemsPerPage={setItemsPerPage}
+          setPage={setPage}
+          // handlePageChange={handlePageChange}
+        />
       </div>
     </section>
   )

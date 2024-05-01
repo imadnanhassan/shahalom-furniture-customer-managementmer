@@ -1,18 +1,26 @@
 import React, { useState } from 'react'
 
 export default function Pagination({
-  totalPages,
-  handlePageChange,
+  totalDatas,
+  // handlePageChange,
+  setPage,
   currentPage,
   itemsPerPage,
-  allProduct,
+  setItemsPerPage,
 }) {
-  const [selectedItems, setSelectedItems] = useState(10) // Default to 10 items
+  // const [selectedItems, setSelectedItems] = useState(10) // Default to 10 items
+  const totalPages = Math.ceil(totalDatas / itemsPerPage)
+  const startItemIndex = (currentPage - 1) * itemsPerPage + 1
+  const endItemIndex = Math.min(currentPage * itemsPerPage, totalDatas)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const handleItemClick = items => {
-    setSelectedItems(items)
-    setIsDropdownOpen(false) // Close dropdown after item selection
+    setItemsPerPage(items)
+    setIsDropdownOpen(false)
+  }
+
+  const handlePageChange = (itemPerPage) => {
+    setPage(itemPerPage)
   }
 
   return (
@@ -25,7 +33,7 @@ export default function Pagination({
               className="py-2 px-4 bg-white text-gray-600 font-medium rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50 inline-flex items-center"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              {selectedItems} items
+              {itemsPerPage} items
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 ml-2"
@@ -63,7 +71,7 @@ export default function Pagination({
         </div>
 
         <p className="text-gray-500 mt-4 lg:mt-0">
-          Showing 10 to 20 of 95 entires
+          Showing {startItemIndex} to {endItemIndex} of {totalDatas} entires
         </p>
       </div>
       <nav
@@ -71,8 +79,7 @@ export default function Pagination({
         className="flex justify-center gap-1 items-center text-gray-600 mt-8 lg:mt-0"
       >
         {/* Previous page button */}
-        <a
-          href={currentPage === 1 ? '#' : undefined}
+        <button
           className={`p-2 mr-4 rounded hover:bg-Vindigo-800 hover:text-lightColor ${
             currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
           }`}
@@ -98,40 +105,33 @@ export default function Pagination({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-        </a>
+        </button>
 
         {/* Pagination buttons */}
         {Array.from({ length: totalPages }, (_, index) => index + 1).map(
           pageNumber => (
-            <a
+            <button
               key={pageNumber}
-              href="#"
               className={`px-4 py-2 rounded ${currentPage === pageNumber ? 'bg-primaryColor text-lightColor font-medium hover:bg-Vindigo-800' : 'hover:bg-Vindigo-800 hover:text-lightColor'}`}
               onClick={() => handlePageChange(pageNumber)}
             >
               {pageNumber}
-            </a>
+            </button>
           ),
         )}
 
         {/* Next page button */}
-        <a
-          href={
-            currentPage === totalPages ||
-            currentPage * itemsPerPage >= allProduct
-              ? '#'
-              : undefined
-          }
+        <button
           className={`p-2 ml-4 rounded hover:bg-Vindigo-800 hover:text-lightColor ${
             currentPage === totalPages ||
-            currentPage * itemsPerPage >= allProduct
+            currentPage * itemsPerPage >= totalDatas
               ? 'opacity-50 cursor-not-allowed'
               : ''
           }`}
           onClick={e => {
             if (
               currentPage === totalPages ||
-              currentPage * itemsPerPage >= allProduct
+              currentPage * itemsPerPage >= totalDatas
             ) {
               e.preventDefault() // Prevent navigation if button is disabled
               return
@@ -153,7 +153,7 @@ export default function Pagination({
               d="M9 5l7 7-7 7"
             />
           </svg>
-        </a>
+        </button>
       </nav>
     </div>
   )
