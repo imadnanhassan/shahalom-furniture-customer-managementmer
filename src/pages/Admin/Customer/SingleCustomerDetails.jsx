@@ -1,5 +1,6 @@
 import React from 'react'
 import { RxCross1 } from 'react-icons/rx'
+import { imagePath } from '../../../helper/imagePath'
 
 export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
   return (
@@ -149,7 +150,7 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
                 {customer?.images.map((preview, index) => (
                   <div key={index}>
                     <img
-                      src={`http://127.0.0.1:8000/storage/customer/${preview?.name}`}
+                      src={`${imagePath}/${preview?.name}`}
                       alt={`Preview ${index}`}
                       className="w-36 h-36 mr-2 mb-2 border rounded "
                     />

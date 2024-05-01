@@ -1,9 +1,9 @@
 import { FaBarsStaggered } from 'react-icons/fa6'
 import { IoLanguage } from 'react-icons/io5'
 import { CiDark } from 'react-icons/ci'
-import { IoMdNotificationsOutline } from 'react-icons/io'
+// import { IoMdNotificationsOutline } from 'react-icons/io'
 import { CiLight } from 'react-icons/ci'
-import userLogo from '../../assets/img/user/user-1.jpg'
+// import userLogo from '../../assets/img/user/user-1.jpg'
 import { useState } from 'react'
 import { toggleMode } from '../../redux/features/themes/themeSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,8 +13,8 @@ import Tooltip from '../../common/Tooltip/Tooltip'
 import { TbWorld } from 'react-icons/tb'
 
 export default function HeaderMenu({ toggleSidebar }) {
-  const [isOpenUser, setIsOpenUser] = useState(false)
-  const [isOpenNotification, setIsOpenNotification] = useState(false)
+  // const [isOpenUser, setIsOpenUser] = useState(false)
+  // const [isOpenNotification, setIsOpenNotification] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isFullscreen, setIsFullscreen] = useState(false)
 
@@ -26,16 +26,16 @@ export default function HeaderMenu({ toggleSidebar }) {
   }
 
   // User Open Function
-  const toggleMenu = () => {
-    setIsOpenUser(!isOpenUser)
-    setIsOpenNotification(false)
-  }
+  // const toggleMenu = () => {
+  //   setIsOpenUser(!isOpenUser)
+  //   setIsOpenNotification(false)
+  // }
 
   // open notification
-  const toggleNotificationMenu = () => {
-    setIsOpenNotification(!isOpenNotification)
-    setIsOpenUser(false)
-  }
+  // const toggleNotificationMenu = () => {
+  //   setIsOpenNotification(!isOpenNotification)
+  //   setIsOpenUser(false)
+  // }
 
   // FullScreen
   const toggleFullscreen = () => {
@@ -61,13 +61,13 @@ export default function HeaderMenu({ toggleSidebar }) {
             />
           </button>
           <Tooltip text="Website">
-            <Link to={'/'}>
+            <Link to={'/dashboard'}>
               <button className="bg-Vindigo-100 cursor-pointer hover:bg-Vindigo-400 hover:text-sideBarTextColor transition-all duration-300 px-2 py-2  rounded">
                 <TbWorld />
               </button>
             </Link>
           </Tooltip>
-          <div className="flex gap-5">
+          {/* <div className="flex gap-5">
             <Link
               to={'/dashboard/pos'}
               className="bg-Vindigo-100 cursor-pointer hover:bg-Vindigo-400 hover:text-sideBarTextColor transition-all duration-300 px-2 py-2  rounded"
@@ -116,7 +116,7 @@ export default function HeaderMenu({ toggleSidebar }) {
                 </g>
               </svg>
             </Link>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex gap-5">
@@ -139,7 +139,7 @@ export default function HeaderMenu({ toggleSidebar }) {
           >
             <RiFullscreenLine className="lg:text-[20px] text-[15px]" />
           </span>
-          <span
+          {/* <span
             onClick={toggleNotificationMenu}
             className="bg-Vindigo-100 cursor-pointer hover:bg-Vindigo-400 hover:text-sideBarTextColor transition-all duration-300 px-2 py-2  rounded "
           >
@@ -163,8 +163,8 @@ export default function HeaderMenu({ toggleSidebar }) {
                 </div>
               </div>
             )}
-          </span>
-          <div className="relative inline-block">
+          </span> */}
+          {/* <div className="relative inline-block">
             <span onClick={toggleMenu}>
               <img
                 src={userLogo}
@@ -203,7 +203,7 @@ export default function HeaderMenu({ toggleSidebar }) {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </header>

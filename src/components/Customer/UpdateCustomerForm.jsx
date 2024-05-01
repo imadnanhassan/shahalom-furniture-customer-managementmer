@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useUpdateCustomerMutation } from '../../redux/features/customer/customerApi'
 import { useSelector } from 'react-redux'
+import { imagePath } from '../../helper/imagePath'
 
 const UpdateCustomerForm = ({ customer, id }) => {
   const [imagePreviews, setImagePreviews] = useState(
@@ -202,7 +203,7 @@ const UpdateCustomerForm = ({ customer, id }) => {
                   {imagePreviews.map((preview, index) => (
                     <div key={index}>
                       <img
-                        src={`http://127.0.0.1:8000/storage/customer/${preview?.name}`}
+                        src={`${imagePath}/${preview?.name}`}
                         alt={`Preview ${index}`}
                         className="w-36 h-36 mr-2 mb-2 border rounded "
                       />

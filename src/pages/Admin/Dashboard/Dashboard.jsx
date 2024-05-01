@@ -7,9 +7,9 @@ import { GiStabbedNote } from 'react-icons/gi'
 import { FaHeart } from 'react-icons/fa6'
 import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import ColumnChart from '../../../components/ColumnChart/ColumnChart'
-import TotalOrder from './TotalOrder'
-import TopCategory from './TopCategory'
-import TopBrands from './TopBrands'
+// import TotalOrder from './TotalOrder'
+// import TopCategory from './TopCategory'
+// import TopBrands from './TopBrands'
 import AreaCharts from '../../../components/ColumnChart/AreaCharts'
 
 const pageTitle = 'Dashboard'
@@ -57,7 +57,7 @@ const Dashboard = () => {
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
-                Totla Visitor
+                Total Visitor
               </p>
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
@@ -81,7 +81,7 @@ const Dashboard = () => {
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
-                Totla Income
+                Total Income
               </p>
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
@@ -105,7 +105,7 @@ const Dashboard = () => {
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
-                Totla Expenses
+                Total Expenses
               </p>
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
@@ -129,7 +129,7 @@ const Dashboard = () => {
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
-                Totla Products
+                Total Products
               </p>
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
@@ -153,7 +153,7 @@ const Dashboard = () => {
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
-                Totla Products
+                Total Products
               </p>
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
@@ -187,9 +187,9 @@ const Dashboard = () => {
       {/* order, top category and top brand */}
 
       <div className="grid lg:grid-cols-2 grid-cols-1 xl:grid-cols-3 mt-10 lg:gap-5 md:gap-3 mb-5">
-        <TotalOrder />
-        <TopCategory />
-        <TopBrands />
+        {/* <TotalOrder /> */}
+        {/* <TopCategory /> */}
+        {/* <TopBrands /> */}
       </div>
     </section>
   )

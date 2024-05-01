@@ -18,6 +18,9 @@ import {
   useGetCustomersQuery,
 } from '../../../redux/features/customer/customerApi'
 import SingleCustomerDetails from './SingleCustomerDetails'
+import { imagePath } from '../../../helper/imagePath'
+import { toast } from 'react-toastify'
+import PreLoader from '../../../common/Loader/PreLoader'
 
 export default function CustomerList() {
   const [customer, setCustomer] = useState({})
@@ -35,9 +38,9 @@ export default function CustomerList() {
 
   query['search'] = searchValue
 
-  query["perPage"] = itemsPerPage;
+  query['perPage'] = itemsPerPage
 
-  const { data: getData } = useGetCustomersQuery(query)
+  const { data: getData, isLoading } = useGetCustomersQuery(query)
   const [deleteCustomer] = useDeleteCustomerMutation()
   const handleHeaderCheckboxChange = () => {
     dispatch(toggleSelectAll(!selectAll))
@@ -55,7 +58,9 @@ export default function CustomerList() {
 
   const handleDeleteCustomer = async id => {
     const res = await deleteCustomer(id)
-    console.log(res)
+    if (res?.data?.status === 200) {
+      toast.success(res?.data?.message)
+    }
   }
 
   // open moda
@@ -69,6 +74,9 @@ export default function CustomerList() {
     setSelectedId(null)
   }
 
+  if (isLoading) {
+    return <PreLoader />
+  }
 
   return (
     <section
@@ -79,9 +87,7 @@ export default function CustomerList() {
       <div
         className={`px-5 py-5 rounded  ${isDarkMode ? 'bg-darkColorCard' : 'bg-lightColor'}`}
       >
-        {/* Products filtering */}
-
-        {/* search product and addProducts */}
+        {/* search customer and add customer */}
         <div className="flex items-center justify-between gap-6 py-3 ">
           <div className="search flex items-center gap-5">
             <div
@@ -110,7 +116,7 @@ export default function CustomerList() {
           </div>
         </div>
 
-        {/* blog table */}
+        {/* customer table */}
 
         <div className="py-5">
           <div className="overflow-x-auto">
@@ -160,11 +166,11 @@ export default function CustomerList() {
                   >
                     Products
                   </th>
-                  <th
+                  {/* <th
                     className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
                     Created Date
-                  </th>
+                  </th> */}
                   <th
                     className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
@@ -226,13 +232,13 @@ export default function CustomerList() {
                         className={`w-[50px] h-[50px] mx-auto rounded-md p-2 ${isDarkMode ? 'bg-[#131A26]' : 'bg-[#f2f2f3]'}`}
                       >
                         <img
-                          src={`http://127.0.0.1:8000/storage/customer/${item?.images[0].name}`}
+                          src={`${imagePath}/${item?.images[0].name}`}
                           alt=""
                           className="w-full"
                         />
                       </div>
                     </td>
-                    <td
+                    {/* <td
                       className={`border-l pl-2 py-2 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                     >
                       <span
@@ -240,7 +246,7 @@ export default function CustomerList() {
                       >
                         {item?.status ? 'Published' : 'Unpublished'}
                       </span>
-                    </td>
+                    </td> */}
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
                         <button
@@ -287,7 +293,6 @@ export default function CustomerList() {
           itemsPerPage={itemsPerPage}
           setItemsPerPage={setItemsPerPage}
           setPage={setPage}
-          // handlePageChange={handlePageChange}
         />
       </div>
     </section>
