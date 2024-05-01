@@ -37,6 +37,7 @@ import AddValue from '../pages/Admin/Products/Attributes/AddValue'
 import ForgotPassword from '../pages/Admin/Auth/ForgotPassword'
 import CustomerList from '../pages/Admin/Customer/CustomerList'
 import AddCustomer from '../pages/Admin/Customer/AddCustomer'
+import UpdateCustomer from '../pages/Admin/Customer/UpdateCustomer'
 
 const router = createBrowserRouter([
   {
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: '/',
+    path: '/dashboard',
     element: <DashboardLayout />,
     errorElement: <ErrorPage />,
     children: [
@@ -73,6 +74,7 @@ const router = createBrowserRouter([
       { path: 'dashboard/add-post', element: <BlogAdd /> },
       { path: 'dashboard/blog-tag', element: <BlogTags /> },
       { path: 'dashboard/all-customers', element: <CustomerList /> },
+      { path: 'dashboard/update-customer/:id', element: <UpdateCustomer /> },
       { path: 'dashboard/add-customer', element: <AddCustomer /> },
       { path: 'dashboard/banner', element: <Banner /> },
       { path: 'dashboard/uploaded-files', element: <UploadedFiles /> },

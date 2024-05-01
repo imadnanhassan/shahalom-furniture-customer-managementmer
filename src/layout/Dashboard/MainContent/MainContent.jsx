@@ -7,7 +7,7 @@ export default function MainContent({ toggleSidebar }) {
     <div className="flex-1 bg-[#F2F6F9] overflow-y-scroll scrollbar-w-2 scrollbar-track-gray-200 scrollbar-thumb-gray-500 scrollbar-thumb-rounded-lg ">
       <HeaderMenu toggleSidebar={toggleSidebar} />
 
-      <main>
+      <main className='min-h-[calc(100vh-140px)]' >
         <Outlet />
       </main>
       <Footer />

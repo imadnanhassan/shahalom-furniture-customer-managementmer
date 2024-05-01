@@ -1,17 +1,17 @@
 import { Link, NavLink } from 'react-router-dom'
 import { GoHome } from 'react-icons/go'
-import { RiFileUploadFill } from 'react-icons/ri'
+// import { RiFileUploadFill } from 'react-icons/ri'
 
 import { FaShoppingBag, FaUserFriends, FaCircleNotch } from 'react-icons/fa'
 import { CiShoppingBasket } from 'react-icons/ci'
-import { FaClipboardList } from 'react-icons/fa6'
-import { BiLogoBlogger } from 'react-icons/bi'
+// import { FaClipboardList } from 'react-icons/fa6'
+// import { BiLogoBlogger } from 'react-icons/bi'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { AiFillSetting, AiFillDollarCircle } from 'react-icons/ai'
-import { MdCampaign } from 'react-icons/md'
-import { PiSlideshowFill } from 'react-icons/pi'
+// import { MdCampaign } from 'react-icons/md'
+// import { PiSlideshowFill } from 'react-icons/pi'
 
-import logo from '../../../assets/img/branging-logo/easy-shop.png'
+// import logo from '../../../assets/img/branging-logo/easy-shop.png'
 
 // Define menu items and submenus as an array of objects
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -165,7 +165,8 @@ export default function SideBar({ isSideBarOpen }) {
         <div className="sideBarOpenCollapse ">
           <div className="pt-2 ">
             <Link to={'/dashboard'}>
-              <img src={logo} alt="" className="w-[150px] mx-auto" />
+              {/* <img src={logo} alt="" className="w-[150px] mx-auto" /> */}
+              <h1 className='text-white mt-6 ml-7'>Shah Alam Furniture</h1>
             </Link>
           </div>
           <div className="pt-4">
@@ -182,7 +183,7 @@ export default function SideBar({ isSideBarOpen }) {
                 </NavLink>
               </li>
 
-              <li>
+              {/* <li>
                 <details className="group [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex gap-3 cursor-pointer items-center  mb-1 px-8 py-2 text-white hover:bg-gray-100 hover:text-gray-700 ">
                     <span>
@@ -303,9 +304,9 @@ export default function SideBar({ isSideBarOpen }) {
                     </li>
                   </ul>
                 </details>
-              </li>
+              </li> */}
               {/* order */}
-              <li>
+              {/* <li>
                 <details className="group [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex gap-3 cursor-pointer items-center  mb-1 px-8 py-2 text-white hover:bg-gray-100 hover:text-gray-700">
                     <span>
@@ -346,10 +347,10 @@ export default function SideBar({ isSideBarOpen }) {
                     </li>
                   </ul>
                 </details>
-              </li>
+              </li> */}
 
               {/* campaign */}
-              <li>
+              {/* <li>
                 <details className="group [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex gap-3 cursor-pointer items-center  mb-1 px-8 py-2 text-white hover:bg-gray-100 hover:text-gray-700 ">
                     <span>
@@ -404,10 +405,10 @@ export default function SideBar({ isSideBarOpen }) {
                     </li>
                   </ul>
                 </details>
-              </li>
+              </li> */}
 
               {/* coupons */}
-              <li>
+              {/* <li>
                 <details className="group [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex gap-3 cursor-pointer items-center  mb-1 px-8 py-2 text-white hover:bg-gray-100 hover:text-gray-700 ">
                     <span>
@@ -462,10 +463,10 @@ export default function SideBar({ isSideBarOpen }) {
                     </li>
                   </ul>
                 </details>
-              </li>
+              </li> */}
 
               {/* User */}
-              <li>
+              {/* <li>
                 <details className="group [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex gap-3 cursor-pointer items-center  mb-1 px-8 py-2 text-white hover:bg-gray-100 hover:text-gray-700 ">
                     <span>
@@ -533,10 +534,10 @@ export default function SideBar({ isSideBarOpen }) {
                     </li>
                   </ul>
                 </details>
-              </li>
+              </li> */}
 
               {/* blogs */}
-              <li>
+              {/* <li>
                 <details className="group [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex gap-3 cursor-pointer items-center  mb-1 px-8 py-2 text-white hover:bg-gray-100 hover:text-gray-700 ">
                     <span>
@@ -617,7 +618,7 @@ export default function SideBar({ isSideBarOpen }) {
                     </li>
                   </ul>
                 </details>
-              </li>
+              </li> */}
 
               {/* Customer */}
               <li>
@@ -678,7 +679,7 @@ export default function SideBar({ isSideBarOpen }) {
               </li>
 
               {/* Banner */}
-              <li>
+              {/* <li>
                 <NavLink
                   to="dashboard/banner"
                   className={({ isActive }) =>
@@ -692,10 +693,10 @@ export default function SideBar({ isSideBarOpen }) {
                   </span>
                   <span className="text-sm font-medium">Banner</span>
                 </NavLink>
-              </li>
+              </li> */}
 
               {/* Uploded File */}
-              <li>
+              {/* <li>
                 <NavLink
                   to="dashboard/uploaded-files"
                   className={({ isActive }) =>
@@ -709,10 +710,10 @@ export default function SideBar({ isSideBarOpen }) {
                   </span>
                   <span className="text-sm font-medium">Uploaded Files</span>
                 </NavLink>
-              </li>
+              </li> */}
 
               {/* settings */}
-              <li className="">
+              {/* <li className="">
                 <NavLink
                   to="dashboard/settings"
                   className={({ isActive }) =>
@@ -726,7 +727,7 @@ export default function SideBar({ isSideBarOpen }) {
                   </span>
                   <span className="text-sm font-medium">Settings</span>
                 </NavLink>
-              </li>
+              </li> */}
 
               <li className="px-8 py-2 text-white hover:bg-gray-100  hover:text-gray-700">
                 <NavLink

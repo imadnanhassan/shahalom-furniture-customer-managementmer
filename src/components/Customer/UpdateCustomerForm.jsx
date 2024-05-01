@@ -1,45 +1,26 @@
 import React, { useState } from 'react'
-import 'react-quill/dist/quill.snow.css'
-import 'filepond/dist/filepond.min.css'
-
-import { GoHome } from 'react-icons/go'
-import { useSelector } from 'react-redux'
-import { registerPlugin } from 'react-filepond'
-import 'filepond/dist/filepond.min.css'
-import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
-import { useForm } from 'react-hook-form'
-import { useAddCustomerMutation } from '../../../redux/features/customer/customerApi'
 import { toast } from 'react-toastify'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-// import { IoCloseOutline } from 'react-icons/io5'
+import { useUpdateCustomerMutation } from '../../redux/features/customer/customerApi'
+import { useSelector } from 'react-redux'
+import { imagePath } from '../../helper/imagePath'
 
-// Register FilePond plugins if needed
-registerPlugin(/* plugins */)
-export default function AddCustomer() {
-  // const [uploadedFiles, setUploadedFiles] = useState([])
-  const [imagePreviews, setImagePreviews] = useState([])
+const UpdateCustomerForm = ({ customer, id }) => {
+  const [imagePreviews, setImagePreviews] = useState(
+    customer && customer.images ? customer.images : [],
+  )
+  const [updateCustomer, { isLoading }] = useUpdateCustomerMutation()
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
-  const [addCustomer, { isLoading }] = useAddCustomerMutation()
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
 
-  const navigate = useNavigate()
-
-  // Breadcrumbs
-  const pageTitle = 'Customer Add'
-  const productLinks = [
-    { title: <GoHome />, link: '/dashboard' },
-    { title: 'Customer List', link: '/dashboard/all-customers' },
-    { title: 'Customer Add ' },
-  ]
-
+    const navigate = useNavigate()
   const handleFileChange = e => {
     const files = Array.from(e.target.files)
-    console.log('files', files)
     const previews = files.map(file => URL.createObjectURL(file))
     setImagePreviews(previews)
   }
@@ -52,46 +33,51 @@ export default function AddCustomer() {
       const formData = new FormData()
 
       // Append other form data fields
-      formData.append('invoice_number', data.invoice_number)
-      formData.append('product_details', data.product_details)
-      formData.append('name', data.name)
-      formData.append('location', data.location)
-      formData.append('number', data.number)
-      formData.append('price', data.price)
-      formData.append('payment_price', data.payment_price)
+      formData.append(
+        'invoice_number',
+        data.invoice_number ? data.invoice_number : customer.invoice_number,
+      )
+      formData.append(
+        'product_details',
+        data.product_details ? data.product_details : customer.product_details,
+      )
+      formData.append('name', data.name ? data.name : customer.name)
+      formData.append(
+        'location',
+        data.location ? data.location : customer.location,
+      )
+      formData.append('number', data.number ? data.number : customer.numbe)
+      formData.append('price', data.price ? data.price : customer.price)
+      formData.append(
+        'payment_price',
+        data.payment_price ? data.payment_price : customer.payment_price,
+      )
 
-      const due = data.price - data.payment_price
+      const due = Number(data.price) - Number(data.payment_price)
 
       formData.append('due_price', due)
 
       // Append uploaded file(s)
       for (let i = 0; i < data.images.length; i++) {
-        formData.append('images[]', data.images[i])
+        formData.append(
+          'images[]',
+          data.images ? data.images[i] : customer.images[i],
+        )
       }
 
-      const res = await addCustomer(formData)
-      if (res?.data?.status === 200) {
-        toast.success(res?.data?.message)
-        navigate('/dashboard/all-customers')
-      }
-
-      console.log(data)
-      console.log(res)
+      const res = await updateCustomer({ body: formData, id })
+        if (res?.data?.status === 200) {
+          toast.success(res?.data?.message)
+          navigate('/dashboard/all-customers')
+        }
     } catch (error) {
       console.error(error)
     }
   }
 
-  console.log(imagePreviews)
-
+  //   console.log(imagePreviews)
   return (
-    <section
-      className={`main-container ${isDarkMode ? 'bg-darkColorBody' : 'bg-lightColorBody'}`}
-    >
-      {/* Breadcrumbs */}
-      <Breadcrumbs title={pageTitle} breadcrumbs={productLinks} />
-
-      {/* Add Product field */}
+    <div>
       <form
         onSubmit={handleSubmit(handleOnSubmit)}
         className="lg:flex gap-5 pb-5"
@@ -115,9 +101,8 @@ export default function AddCustomer() {
                   name="invoice_number"
                   placeholder="Enter Invoice Number"
                   className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                  {...register('invoice_number', {
-                    required: 'Must be provide Invoice Number',
-                  })}
+                  defaultValue={customer?.invoice_number}
+                  {...register('invoice_number')}
                 />
                 {errors.invoice_number && (
                   <span className="text-red-500">
@@ -140,10 +125,9 @@ export default function AddCustomer() {
                     id="price"
                     name="price"
                     placeholder="Enter Price"
+                    defaultValue={customer?.price}
                     className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                    {...register('price', {
-                      required: 'Must be provide Price',
-                    })}
+                    {...register('price')}
                   />
                   {errors.price && (
                     <span className="text-red-500">
@@ -165,10 +149,9 @@ export default function AddCustomer() {
                     id="payment_price"
                     name="payment_Price"
                     placeholder="Enter Payment Price"
+                    defaultValue={customer?.payment_price}
                     className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                    {...register('payment_price', {
-                      required: 'Must be provide Payment Price',
-                    })}
+                    {...register('payment_price')}
                   />
                   {errors.payment_price && (
                     <span className="text-red-500">
@@ -190,10 +173,9 @@ export default function AddCustomer() {
                 rows="4"
                 id="productdetails"
                 placeholder="Enter Your Product Details"
+                defaultValue={customer?.product_details}
                 className={`mt-1 p-3  border block w-full shadow-sm sm:text-sm  rounded-md  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText focus:outline-none' : 'text-gray-700 focus:outline-none focus:ring-indigo-500 focus:border-primaryColor hover:border-gray-400 border-gray-300'}`}
-                {...register('product_details', {
-                  required: 'Product Details is requied!',
-                })}
+                {...register('product_details')}
               ></textarea>
               {errors.product_details && (
                 <span className="text-red-500">
@@ -214,14 +196,14 @@ export default function AddCustomer() {
                   type="file"
                   className={`w-full text-sm border file:cursor-pointer cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4  rounded focus:outline-none  focus:border-primaryColor ${isDarkMode ? 'bg-darkColorCard file:bg-primaryColor border-primaryColor text-lightColor file:text-black ' : 'bg-lightColor hover:border-primaryColor/50 file:text-white file:bg-primaryColor file:hover:bg-primaryColor/90 border-primaryColor/30 text-black'}`}
                   onChange={handleFileChange}
-                  {...register('images', { required: 'Please select file(s)' })}
+                  {...register('images')}
                   multiple
                 />
                 <div className="mt-4 flex items-center  relative ">
                   {imagePreviews.map((preview, index) => (
                     <div key={index}>
                       <img
-                        src={preview}
+                        src={`${imagePath}/${preview?.name}`}
                         alt={`Preview ${index}`}
                         className="w-36 h-36 mr-2 mb-2 border rounded "
                       />
@@ -259,10 +241,9 @@ export default function AddCustomer() {
                       id="name"
                       name="name"
                       placeholder="Enter Name"
+                      defaultValue={customer?.name}
                       className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                      {...register('name', {
-                        required: 'Name is requied!',
-                      })}
+                      {...register('name')}
                     />
                     {errors.name && (
                       <span className="text-red-500">
@@ -284,10 +265,9 @@ export default function AddCustomer() {
                       id="location"
                       name="location"
                       placeholder="Enter Location"
+                      defaultValue={customer?.location}
                       className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                      {...register('location', {
-                        required: 'Location is requied!',
-                      })}
+                      {...register('location')}
                     />
                     {errors.location && (
                       <span className="text-red-500">
@@ -309,10 +289,9 @@ export default function AddCustomer() {
                       id="number"
                       name="number"
                       placeholder="Enter Number"
+                      defaultValue={customer?.number}
                       className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                      {...register('number', {
-                        required: 'Number is requied!',
-                      })}
+                      {...register('number')}
                     />
                     {errors.number && (
                       <span className="text-red-500">
@@ -369,18 +348,20 @@ export default function AddCustomer() {
               disabled
               className="bg-primaryColor py-3 mr-10 mt-10 ml-auto px-4 rounded text-white text-[14px] flex gap-2 items-center"
             >
-              Submiting...
+              Updating...
             </button>
           ) : (
             <button
               type="submit"
               className="bg-primaryColor py-3 mr-10 mt-10 ml-auto px-4 rounded text-white text-[14px] flex gap-2 items-center"
             >
-              Submit
+              Update
             </button>
           )}
         </div>
       </form>
-    </section>
+    </div>
   )
 }
+
+export default UpdateCustomerForm
