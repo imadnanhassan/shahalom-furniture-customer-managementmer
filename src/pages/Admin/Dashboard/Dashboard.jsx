@@ -4,23 +4,28 @@ import { MdOutlineShoppingBag } from 'react-icons/md'
 import { FaUser } from 'react-icons/fa'
 import { AiFillDollarCircle } from 'react-icons/ai'
 import { GiStabbedNote } from 'react-icons/gi'
-import { FaHeart } from 'react-icons/fa6'
 import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import ColumnChart from '../../../components/ColumnChart/ColumnChart'
 // import TotalOrder from './TotalOrder'
 // import TopCategory from './TopCategory'
 // import TopBrands from './TopBrands'
 import AreaCharts from '../../../components/ColumnChart/AreaCharts'
-import { useContext } from 'react'
-import { AuthContext } from '../../../context/context'
+import { useGetFinancialQuery } from '../../../redux/features/financial/financialApi'
 
 const pageTitle = 'Dashboard'
 const productLinks = [{ title: <></>, link: '/' }]
 
 const Dashboard = () => {
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
-  const {user} = useContext(AuthContext)
-  console.log(user)
+  const query = {}
+  query['day'] = 7
+  query['month'] = 0
+  query['year'] = 0
+  const { data, isLoading } = useGetFinancialQuery(query)
+
+  if (isLoading) {
+    return null
+  }
 
   return (
     <section
@@ -28,7 +33,7 @@ const Dashboard = () => {
     >
       <Breadcrumbs title={pageTitle} breadcrumbs={productLinks} />
       {/* total info */}
-      <div className="md:grid 2xl:grid-cols-6 xl:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5 ">
+      <div className="md:grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5 ">
         <div
           className={` rounded w-full py-5  ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText border'}`}
         >
@@ -38,12 +43,12 @@ const Dashboard = () => {
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
-                Total Sales
+                Total Customers
               </p>
               <p
                 className={`text-[20px]  font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
               >
-                12,088
+                {data?.financial_data?.total_customer}
               </p>
               <p className="text-[12px]">
                 Increased by <strong className="text-error-100">-12.2%</strong>
@@ -61,12 +66,12 @@ const Dashboard = () => {
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
-                Total Visitor
+                Total Price
               </p>
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
               >
-                12,088
+                {data.financial_data?.total_price}
               </p>
               <p className="text-[12px]">
                 Increased by{' '}
@@ -90,7 +95,7 @@ const Dashboard = () => {
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
               >
-                12,088
+                {data?.financial_data?.income}
               </p>
               <p className="text-[12px]">
                 Increased by{' '}
@@ -109,12 +114,12 @@ const Dashboard = () => {
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
-                Total Expenses
+                Total Due Price
               </p>
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
               >
-                12,088
+                {data?.financial_data?.due_price}
               </p>
               <p className="text-[12px]">
                 Increased by{' '}
@@ -124,7 +129,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div
+        {/* <div
           className={`rounded w-full py-5 lg:mt-0 md:mt-0 mt-2 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText border'}`}
         >
           <div className="dashboardCard">
@@ -146,9 +151,9 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <div
+        {/* <div
           className={` rounded w-full py-5 lg:mt-0 md:mt-0 mt-2 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText border'}`}
         >
           <div className="dashboardCard">
@@ -170,7 +175,7 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Chart */}
@@ -179,7 +184,7 @@ const Dashboard = () => {
         <div
           className={` rounded w-full py-5 px-5 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText '}`}
         >
-          <ColumnChart />
+          <ColumnChart monthlyDatas={data?.monthly} />
         </div>
         <div
           className={` rounded w-full py-5 px-5 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText '}`}

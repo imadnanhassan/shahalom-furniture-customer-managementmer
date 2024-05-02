@@ -119,10 +119,9 @@ export default function CustomerList() {
         {/* customer table */}
 
         <div className="py-5">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-scroll px-3">
             <table
-              id="data-table"
-              className={`min-w-full border  table-auto  ${isDarkMode ? 'border-darkColorBody' : 'border-gray-200 divide-y divide-gray-200'}`}
+              className={`min-w-full border  ${isDarkMode ? 'border-darkColorBody' : 'border-gray-200 divide-y divide-gray-200'}`}
             >
               <thead
                 className={`${isDarkMode ? 'bg-[#131A26]' : 'bg-gray-100'}`}
@@ -157,7 +156,7 @@ export default function CustomerList() {
                     Invoice No.
                   </th>
                   <th
-                    className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
+                    className={`w-[300px] border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
                     Product Details
                   </th>
@@ -206,7 +205,7 @@ export default function CustomerList() {
                     </td>
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
                       <h6
-                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                        className={`text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                       >
                         {item?.location}
                       </h6>
@@ -218,9 +217,9 @@ export default function CustomerList() {
                         {item?.invoice_number}
                       </h6>
                     </td>
-                    <td className="border-l pl-2 py-4 whitespace-nowrap">
+                    <td className=" border-l pl-2 py-4 whitespace-nowrap">
                       <h6
-                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                        className={`w-[300px] text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                       >
                         {item?.product_details}
                       </h6>

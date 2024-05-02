@@ -42,7 +42,7 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
     <>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/5 ">
-          <div className="relative overflow-hidden left-[10px] text-left bg-white rounded shadow w-full lg:w-6/12 p-6 max-h-[90vh] overflow-y-auto">
+          <div className="relative overflow-hidden left-[10px] text-left bg-white rounded shadow w-full sm:w-8/12 p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <div></div>
               <button
