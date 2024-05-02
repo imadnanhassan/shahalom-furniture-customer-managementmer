@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import 'react-quill/dist/quill.snow.css'
 
+import { toast } from 'react-toastify'
 import { GoHome } from 'react-icons/go'
 import { useSelector } from 'react-redux'
-import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import { useForm } from 'react-hook-form'
-import { useAddCustomerMutation } from '../../../redux/features/customer/customerApi'
-import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
+import { useAddCustomerMutation } from '../../../redux/features/customer/customerApi'
 
 // import { IoCloseOutline } from 'react-icons/io5'
 export default function AddCustomer() {
@@ -33,7 +33,6 @@ export default function AddCustomer() {
 
   const handleFileChange = e => {
     const files = Array.from(e.target.files)
-    console.log('files', files)
     const previews = files.map(file => URL.createObjectURL(file))
     setImagePreviews(previews)
   }

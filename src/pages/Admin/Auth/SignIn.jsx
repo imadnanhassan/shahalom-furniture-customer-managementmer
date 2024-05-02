@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import images from '../../../assets/img/images'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
@@ -24,6 +24,8 @@ export default function SignIn() {
     try {
       const response = await addLogin(data)
 
+      console.log()
+
       if (response?.data?.status === 200) {
         localStorage.setItem('token', JSON.stringify(response?.data?.token))
         setUser(true)
@@ -32,6 +34,11 @@ export default function SignIn() {
           autoClose: 3000,
         })
         navigate(form, { replace: true })
+        window.location.reload(true)
+      } else if (response?.data?.status === 402) {
+        toast.error(response?.data?.message)
+      } else if (response?.data?.status === 401) {
+        toast.error(response?.data?.message)
       }
     } catch (error) {
       console.error('An error occurred:', error)
@@ -160,14 +167,14 @@ export default function SignIn() {
                     Remember me
                   </label>
                 </div>
-                <div>
+                {/* <div>
                   <Link
                     to="/dashboard/signin/forgetpassword"
                     className="text-primaryColor font-semibold text-sm hover:underline"
                   >
                     Forgot Password?
                   </Link>
-                </div>
+                </div> */}
               </div>
               <div className="mt-12">
                 {isLoading ? (

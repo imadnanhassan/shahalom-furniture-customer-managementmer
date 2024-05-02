@@ -1,20 +1,30 @@
 import React from 'react'
 import Chart from 'react-apexcharts'
 
-export default function ColumnChart({ isDarkMode }) {
+export default function ColumnChart({ isDarkMode, monthlyDatas }) {
+  const months = Array.from({ length: 12 }, (_, i) => i + 1) // Assuming data for 12 months
+
+  // Function to generate series data for each type (Total Price, Payment Price, Due Price)
+  const generateSeriesData = type => {
+    return months.map(month => {
+      const dataObj = monthlyDatas.find(data => data.month === month)
+      return dataObj ? dataObj[type] / 1 : 0 // Dividing by 1000 for better visualization on the chart
+    })
+  }
+
   const chartData = {
     series: [
       {
-        name: 'Net Profit',
-        data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
+        name: 'Total Price',
+        data: generateSeriesData("total_price"),
       },
       {
-        name: 'Revenue',
-        data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
+        name: 'Payment Price',
+        data: generateSeriesData("payment_price"),
       },
       {
-        name: 'Free Cash Flow',
-        data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
+        name: 'Due Price',
+        data: generateSeriesData("due"),
       },
     ],
     options: {
@@ -39,6 +49,7 @@ export default function ColumnChart({ isDarkMode }) {
       },
       xaxis: {
         categories: [
+          'Jan',
           'Feb',
           'Mar',
           'Apr',
@@ -48,11 +59,13 @@ export default function ColumnChart({ isDarkMode }) {
           'Aug',
           'Sep',
           'Oct',
+          'Nov',
+          'Dec',
         ],
       },
       yaxis: {
         title: {
-          text: '$ (thousands)',
+          text: '৳ (Price)',
         },
       },
       fill: {
@@ -61,7 +74,7 @@ export default function ColumnChart({ isDarkMode }) {
       tooltip: {
         y: {
           formatter: function (val) {
-            return '$ ' + val + ' thousands'
+            return '৳ ' + val + ''
           },
         },
       },
@@ -75,6 +88,7 @@ export default function ColumnChart({ isDarkMode }) {
         xaxis: {
           ...chartData.options.xaxis,
           categories: [
+            'Jan',
             'Feb',
             'Mar',
             'Apr',
@@ -84,6 +98,8 @@ export default function ColumnChart({ isDarkMode }) {
             'Aug',
             'Sep',
             'Oct',
+            'Nov',
+            'Dec',
           ],
         },
       }}

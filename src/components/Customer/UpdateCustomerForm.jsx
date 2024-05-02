@@ -77,15 +77,13 @@ const UpdateCustomerForm = ({ customer, id }) => {
           data.images ? data.images[i] : customer.images[i],
         )
       }
-      console.log(data)
 
       const res = await updateCustomer({ body: formData, id })
-      console.log(res)
       if (res?.data?.status === 200) {
         toast.success(res?.data?.message)
         navigate('/dashboard/all-customers')
       } else if (res?.data?.status === 401) {
-        toast.error(res?.data?.errors[0])
+        res?.data?.errors?.forEach(errorData => toast.error(errorData))
       }
     } catch (error) {
       console.error(error)
@@ -94,9 +92,11 @@ const UpdateCustomerForm = ({ customer, id }) => {
 
   const handleDeleteImage = async imageid => {
     const res = await deleteImage(imageid)
-    const remaingImage = imagePreviews.filter(item => item.id !== imageid);
-    setImagePreviews(remaingImage);
-    console.log(res)
+    if (res?.data?.status === 200) {
+      toast.success(res?.data?.message)
+    }
+    const remaingImage = imagePreviews.filter(item => item.id !== imageid)
+    setImagePreviews(remaingImage)
   }
 
   return (
@@ -147,15 +147,8 @@ const UpdateCustomerForm = ({ customer, id }) => {
                   placeholder="Enter Reference Name"
                   defaultValue={customer?.reference_name}
                   className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                  {...register('reference_name', {
-                    required: 'Reference Name is required!',
-                  })}
+                  {...register('reference_name')}
                 />
-                {errors.reference_name && (
-                  <span className="text-red-500">
-                    {errors.reference_name?.message}
-                  </span>
-                )}
               </div>
             </div>
             <div className="mb-4 flex gap-4">

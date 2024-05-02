@@ -1,9 +1,11 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RxCross1 } from 'react-icons/rx'
 import { imagePath } from '../../../helper/imagePath'
 import { useReactToPrint } from 'react-to-print'
 
 export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
+  const [createDate, setCreateDate] = useState(null)
+  const [error, setError] = useState(null);
   const formatDate = () => {
     const date = new Date()
     const options = {
@@ -23,15 +25,24 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
     content: () => componentRef.current,
   })
 
-  const dateString = customer?.created_at
-  const dateObj = new Date(dateString)
-  const formattedDate = dateObj.toISOString().split('T')[0]
-  console.log(customer?.created_at)
+  useEffect(() => {
+    if (customer && customer.created_at) {
+      const dateString = customer.created_at;
+      const dateObj = new Date(dateString);
+
+      if (!isNaN(dateObj.getTime())) { // Check if the date is valid
+        const formattedDate = dateObj.toISOString().split('T')[0];
+        setCreateDate(formattedDate);
+      } else {
+        setError('Invalid date format');
+      }
+    }
+  }, [customer]); // Run this effect whenever 'customer' changes
   return (
     <>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/5 ">
-          <div className="relative overflow-hidden left-[10px] text-left bg-white rounded shadow w-full lg:w-6/12 p-6 max-h-[90vh] overflow-y-auto">
+          <div className="relative overflow-hidden left-[10px] text-left bg-white rounded shadow w-full sm:w-8/12 p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <div></div>
               <button
@@ -64,7 +75,7 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
                 </p>
                 <p>
                   <span>Date: </span>
-                  <span>{formattedDate}</span>
+                  <span>{createDate}</span>
                 </p>
               </div>
               <table>
