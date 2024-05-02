@@ -166,11 +166,11 @@ export default function CustomerList() {
                   >
                     Products
                   </th>
-                  {/* <th
+                  <th
                     className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
-                    Created Date
-                  </th> */}
+                    Delivery Date
+                  </th>
                   <th
                     className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
@@ -238,15 +238,15 @@ export default function CustomerList() {
                         />
                       </div>
                     </td>
-                    {/* <td
+                    <td
                       className={`border-l pl-2 py-2 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                     >
                       <span
                         className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${item.status ? 'bg-[#E8F9EF] text-[#22c55e]' : 'bg-gray-100 text-gray-400'}`}
                       >
-                        {item?.status ? 'Published' : 'Unpublished'}
+                        {item?.delivery_date}
                       </span>
-                    </td> */}
+                    </td>
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
                         <button
