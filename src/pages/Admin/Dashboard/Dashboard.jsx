@@ -11,12 +11,16 @@ import ColumnChart from '../../../components/ColumnChart/ColumnChart'
 // import TopCategory from './TopCategory'
 // import TopBrands from './TopBrands'
 import AreaCharts from '../../../components/ColumnChart/AreaCharts'
+import { useContext } from 'react'
+import { AuthContext } from '../../../context/context'
 
 const pageTitle = 'Dashboard'
 const productLinks = [{ title: <></>, link: '/' }]
 
 const Dashboard = () => {
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
+  const {user} = useContext(AuthContext)
+  console.log(user)
 
   return (
     <section

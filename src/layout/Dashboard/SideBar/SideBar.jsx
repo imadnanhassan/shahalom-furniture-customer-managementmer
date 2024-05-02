@@ -8,6 +8,8 @@ import { CiShoppingBasket } from 'react-icons/ci'
 // import { BiLogoBlogger } from 'react-icons/bi'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { AiFillSetting, AiFillDollarCircle } from 'react-icons/ai'
+import { useContext } from 'react'
+import { AuthContext } from '../../../context/context'
 // import { MdCampaign } from 'react-icons/md'
 // import { PiSlideshowFill } from 'react-icons/pi'
 
@@ -48,6 +50,7 @@ const menuItems = [
 ]
 
 export default function SideBar({ isSideBarOpen }) {
+  const { logout } = useContext(AuthContext)
   return (
     <aside
       className={` main-content overflow-y-auto bg-sideBarColor  
@@ -166,7 +169,7 @@ export default function SideBar({ isSideBarOpen }) {
           <div className="pt-2 ">
             <Link to={'/dashboard'}>
               {/* <img src={logo} alt="" className="w-[150px] mx-auto" /> */}
-              <h1 className='text-white mt-6 ml-7'>Shah Alam Furniture</h1>
+              <h1 className="text-white mt-6 ml-7">Shah Alam Furniture</h1>
             </Link>
           </div>
           <div className="pt-4">
@@ -731,6 +734,9 @@ export default function SideBar({ isSideBarOpen }) {
 
               <li className="px-8 py-2 text-white hover:bg-gray-100  hover:text-gray-700">
                 <NavLink
+                  onClick={() => {
+                    logout()
+                  }}
                   to="dashboard/signin"
                   className="flex items-center gap-3"
                 >
