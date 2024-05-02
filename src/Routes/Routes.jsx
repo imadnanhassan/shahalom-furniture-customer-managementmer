@@ -38,6 +38,7 @@ import ForgotPassword from '../pages/Admin/Auth/ForgotPassword'
 import CustomerList from '../pages/Admin/Customer/CustomerList'
 import AddCustomer from '../pages/Admin/Customer/AddCustomer'
 import UpdateCustomer from '../pages/Admin/Customer/UpdateCustomer'
+import ProtectRoute from './ProtectRoute'
 
 const router = createBrowserRouter([
   {
@@ -47,11 +48,18 @@ const router = createBrowserRouter([
   },
 
   {
-    path: '/dashboard',
+    path: '/',
     element: <DashboardLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: '/dashboard', element: <Dashboard /> },
+      {
+        path: '/dashboard',
+        element: (
+          <ProtectRoute>
+            <Dashboard />
+          </ProtectRoute>
+        ),
+      },
       { path: 'dashboard/products-list', element: <ProductsList /> },
       { path: 'dashboard/add-product', element: <AddProduct /> },
       { path: 'dashboard/products-details', element: <ProductsDetails /> },
@@ -73,9 +81,30 @@ const router = createBrowserRouter([
       { path: 'dashboard/blog-category', element: <BlogCategories /> },
       { path: 'dashboard/add-post', element: <BlogAdd /> },
       { path: 'dashboard/blog-tag', element: <BlogTags /> },
-      { path: 'dashboard/all-customers', element: <CustomerList /> },
-      { path: 'dashboard/update-customer/:id', element: <UpdateCustomer /> },
-      { path: 'dashboard/add-customer', element: <AddCustomer /> },
+      {
+        path: 'dashboard/all-customers',
+        element: (
+          <ProtectRoute>
+            <CustomerList />
+          </ProtectRoute>
+        ),
+      },
+      {
+        path: 'dashboard/update-customer/:id',
+        element: (
+          <ProtectRoute>
+            <UpdateCustomer />
+          </ProtectRoute>
+        ),
+      },
+      {
+        path: 'dashboard/add-customer',
+        element: (
+          <ProtectRoute>
+            <AddCustomer />
+          </ProtectRoute>
+        ),
+      },
       { path: 'dashboard/banner', element: <Banner /> },
       { path: 'dashboard/uploaded-files', element: <UploadedFiles /> },
       { path: 'dashboard/campaign-add', element: <CampaignAdd /> },

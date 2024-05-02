@@ -2,15 +2,20 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { useUpdateCustomerMutation } from '../../redux/features/customer/customerApi'
+import {
+  useDeleteImageMutation,
+  useUpdateCustomerMutation,
+} from '../../redux/features/customer/customerApi'
 import { useSelector } from 'react-redux'
 import { imagePath } from '../../helper/imagePath'
+import { IoCloseOutline } from 'react-icons/io5'
 
 const UpdateCustomerForm = ({ customer, id }) => {
   const [imagePreviews, setImagePreviews] = useState(
     customer && customer.images ? customer.images : [],
   )
   const [updateCustomer, { isLoading }] = useUpdateCustomerMutation()
+  const [deleteImage] = useDeleteImageMutation()
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
   const {
     register,
@@ -18,7 +23,7 @@ const UpdateCustomerForm = ({ customer, id }) => {
     formState: { errors },
   } = useForm()
 
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   const handleFileChange = e => {
     const files = Array.from(e.target.files)
     const previews = files.map(file => URL.createObjectURL(file))
@@ -27,7 +32,7 @@ const UpdateCustomerForm = ({ customer, id }) => {
 
   const handleOnSubmit = async data => {
     try {
-      if (data.price < data.payment_price) {
+      if (Number(data.price) < Number(data.payment_price)) {
         return toast.error('Payment price would be lessthan price!')
       }
       const formData = new FormData()
@@ -52,6 +57,14 @@ const UpdateCustomerForm = ({ customer, id }) => {
         'payment_price',
         data.payment_price ? data.payment_price : customer.payment_price,
       )
+      formData.append(
+        'reference_name',
+        data.reference_name ? data.reference_name : customer.reference_name,
+      )
+      formData.append(
+        'delivery_date',
+        data.delivery_date ? data.delivery_date : customer.delivery_date,
+      )
 
       const due = Number(data.price) - Number(data.payment_price)
 
@@ -64,18 +77,28 @@ const UpdateCustomerForm = ({ customer, id }) => {
           data.images ? data.images[i] : customer.images[i],
         )
       }
+      console.log(data)
 
       const res = await updateCustomer({ body: formData, id })
-        if (res?.data?.status === 200) {
-          toast.success(res?.data?.message)
-          navigate('/dashboard/all-customers')
-        }
+      console.log(res)
+      if (res?.data?.status === 200) {
+        toast.success(res?.data?.message)
+        navigate('/dashboard/all-customers')
+      } else if (res?.data?.status === 401) {
+        toast.error(res?.data?.errors[0])
+      }
     } catch (error) {
       console.error(error)
     }
   }
 
-  //   console.log(imagePreviews)
+  const handleDeleteImage = async imageid => {
+    const res = await deleteImage(imageid)
+    const remaingImage = imagePreviews.filter(item => item.id !== imageid);
+    setImagePreviews(remaingImage);
+    console.log(res)
+  }
+
   return (
     <div>
       <form
@@ -110,55 +133,91 @@ const UpdateCustomerForm = ({ customer, id }) => {
                   </span>
                 )}
               </div>
-            </div>
-            <div className="flex gap-5">
-              <div className="mb-4 flex gap-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor="price"
-                    className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
-                  >
-                    Price
-                  </label>
-                  <input
-                    type="text"
-                    id="price"
-                    name="price"
-                    placeholder="Enter Price"
-                    defaultValue={customer?.price}
-                    className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                    {...register('price')}
-                  />
-                  {errors.price && (
-                    <span className="text-red-500">
-                      {errors.price?.message}
-                    </span>
-                  )}
-                </div>
+              <div className="flex-1">
+                <label
+                  htmlFor="reference_name"
+                  className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+                >
+                  Reference Name(Optional)
+                </label>
+                <input
+                  type="text"
+                  id="reference_name"
+                  name="reference_name"
+                  placeholder="Enter Reference Name"
+                  defaultValue={customer?.reference_name}
+                  className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                  {...register('reference_name', {
+                    required: 'Reference Name is required!',
+                  })}
+                />
+                {errors.reference_name && (
+                  <span className="text-red-500">
+                    {errors.reference_name?.message}
+                  </span>
+                )}
               </div>
-              <div className="mb-4 flex gap-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor="payment_price"
-                    className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
-                  >
-                    Payment Price
-                  </label>
-                  <input
-                    type="text"
-                    id="payment_price"
-                    name="payment_Price"
-                    placeholder="Enter Payment Price"
-                    defaultValue={customer?.payment_price}
-                    className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                    {...register('payment_price')}
-                  />
-                  {errors.payment_price && (
-                    <span className="text-red-500">
-                      {errors.payment_price?.message}
-                    </span>
-                  )}
-                </div>
+            </div>
+            <div className="mb-4 flex gap-4">
+              <div className="flex-1">
+                <label
+                  htmlFor="price"
+                  className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+                >
+                  Price
+                </label>
+                <input
+                  type="text"
+                  id="price"
+                  name="price"
+                  placeholder="Enter Price"
+                  defaultValue={customer?.price}
+                  className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                  {...register('price')}
+                />
+                {errors.price && (
+                  <span className="text-red-500">{errors.price?.message}</span>
+                )}
+              </div>
+              <div className="flex-1">
+                <label
+                  htmlFor="payment_price"
+                  className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+                >
+                  Payment Price
+                </label>
+                <input
+                  type="text"
+                  id="payment_price"
+                  name="payment_Price"
+                  placeholder="Enter Payment Price"
+                  defaultValue={customer?.payment_price}
+                  className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                  {...register('payment_price')}
+                />
+                {errors.payment_price && (
+                  <span className="text-red-500">
+                    {errors.payment_price?.message}
+                  </span>
+                )}
+              </div>
+              <div className="flex-1">
+                <label
+                  htmlFor="delivery_date"
+                  className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+                >
+                  Delivery Date
+                </label>
+                <input
+                  className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                  type="date"
+                  name="delivery_date"
+                  id="delivery_date"
+                  defaultValue={customer?.delivery_date}
+                  {...register('delivery_date', {
+                    required: 'Delivery date must be provide',
+                  })}
+                />
               </div>
             </div>
 
@@ -205,12 +264,12 @@ const UpdateCustomerForm = ({ customer, id }) => {
                       <img
                         src={`${imagePath}/${preview?.name}`}
                         alt={`Preview ${index}`}
-                        className="w-36 h-36 mr-2 mb-2 border rounded "
+                        className="w-36 h-36 mr-2 mb-2 border rounded"
                       />
-                      {/* <IoCloseOutline
-                  onClick={handleCencelPhoto}
-                  className=" text-[17px] bg-primaryColor text-white hover:text-white hover:bg-error-200 transition-all duration-200 cursor-pointer rounded -mt-[133px] relative -left-6"
-                /> */}
+                      <IoCloseOutline
+                        onClick={() => handleDeleteImage(preview?.id)}
+                        className=" text-[17px] bg-primaryColor text-white hover:text-white hover:bg-error-200 transition-all duration-200 cursor-pointer rounded -mt-[145px] absolute ml-2"
+                      />
                     </div>
                   ))}
                 </div>

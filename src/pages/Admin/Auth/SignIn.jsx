@@ -1,41 +1,42 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import images from '../../../assets/img/images'
-// import { toast } from 'react-toastify'
-// import { useForm } from 'react-hook-form'
-// import { useAddLoginMutation } from '../../../redux/features/api/signin/signinApi'
+import { toast } from 'react-toastify'
+import { useForm } from 'react-hook-form'
+import { useAddLoginMutation } from '../../../redux/features/api/signin/signinApi'
+import { AuthContext } from '../../../context/context'
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
+  const location = useLocation()
+  const form = location?.state?.from?.pathname || '/dashboard'
+  const navigate = useNavigate()
+  const [addLogin, { isLoading }] = useAddLoginMutation()
+  const { setUser } = useContext(AuthContext)
 
-  // const navigate = useNavigate()
-  // const [addLogin] = useAddLoginMutation()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm()
+  const onSubmit = async data => {
+    try {
+      const response = await addLogin(data)
 
-  // const onSubmit = async data => {
-  //   try {
-  //     const response = await addLogin(data)
-
-  //     console.log('res', response)
-
-  //     if (response?.data?.message) {
-  //       toast.success(`${response?.data.message}`, {
-  //         position: 'top-right',
-  //         autoClose: 3000,
-  //       })
-
-  //       localStorage.setItem('userData', JSON.stringify(response?.data))
-  //       navigate('/dashboard')
-  //     }
-  //   } catch (error) {
-  //     console.error('An error occurred:', error)
-  //   }
-  // }
+      if (response?.data?.status === 200) {
+        localStorage.setItem('token', JSON.stringify(response?.data?.token))
+        setUser(true)
+        toast.success(`${response?.data.message}`, {
+          position: 'top-right',
+          autoClose: 3000,
+        })
+        navigate(form, { replace: true })
+      }
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+  }
 
   // show passwoprd
   const togglePasswordVisibility = () => {
@@ -49,7 +50,7 @@ export default function SignIn() {
           <div className="flex items-center md:p-8 p-6 bg-white md:rounded-tr-[55px] md:rounded-br-[55px] h-full">
             <form
               className="max-w-lg w-full mx-auto"
-              // onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <div className="mb-12">
                 <h3 className="text-4xl font-extrabold">Sign in</h3>
@@ -68,7 +69,7 @@ export default function SignIn() {
                 <div className="relative flex items-center">
                   <input
                     name="email"
-                    // {...register('email', { required: 'Email is required' })}
+                    {...register('email', { required: 'Email is required' })}
                     type="email"
                     placeholder="Enter Email"
                     className="w-full text-sm border-b border-Vindigo-400 focus:border-Vindigo-800 px-2 py-3 outline-none"
@@ -103,11 +104,11 @@ export default function SignIn() {
                     </g>
                   </svg>
                 </div>
-                {/* {errors.email && (
+                {errors.email && (
                   <p className="text-error-200 mt-1 font-extralight">
                     {errors?.email?.message}
                   </p>
-                )} */}
+                )}
               </div>
               <div className="mt-8">
                 <label className="text-xs block mb-2">Password</label>
@@ -115,14 +116,14 @@ export default function SignIn() {
                   <input
                     name="password"
                     type={showPassword ? 'text' : 'password'}
-                    // {...register('password', {
-                    //   required: 'Password is required',
-                    //   validate: value => {
-                    //     if (value.length < 7) {
-                    //       return 'Password must be at least 8 characters'
-                    //     }
-                    //   },
-                    // })}
+                    {...register('password', {
+                      required: 'Password is required',
+                      validate: value => {
+                        if (value.length < 7) {
+                          return 'Password must be at least 8 characters'
+                        }
+                      },
+                    })}
                     className="w-full text-sm border-b border-Vindigo-400 focus:border-Vindigo-800 px-2 py-3 outline-none"
                     placeholder="Enter password"
                   />
@@ -141,11 +142,11 @@ export default function SignIn() {
                   </svg>
                 </div>
 
-                {/* {errors.password && (
+                {errors.password && (
                   <p className="text-error-200 mt-1 font-extralight">
                     {errors?.password?.message}
                   </p>
-                )} */}
+                )}
               </div>
               <div className="flex items-center justify-between gap-2 mt-5">
                 <div className="flex items-center">
@@ -169,12 +170,22 @@ export default function SignIn() {
                 </div>
               </div>
               <div className="mt-12">
-                <button
-                  type="submit"
-                  className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-full text-white bg-primaryColor hover:bg-primaryColor/80 focus:outline-none"
-                >
-                  Sign in
-                </button>
+                {isLoading ? (
+                  <button
+                    type="button"
+                    disabled
+                    className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-full text-white bg-primaryColor hover:bg-primaryColor/80 focus:outline-none"
+                  >
+                    Loading...
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-full text-white bg-primaryColor hover:bg-primaryColor/80 focus:outline-none"
+                  >
+                    Sign in
+                  </button>
+                )}
               </div>
             </form>
           </div>

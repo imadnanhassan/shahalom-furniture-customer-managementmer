@@ -1,22 +1,16 @@
 import React, { useState } from 'react'
 import 'react-quill/dist/quill.snow.css'
-import 'filepond/dist/filepond.min.css'
 
 import { GoHome } from 'react-icons/go'
 import { useSelector } from 'react-redux'
-import { registerPlugin } from 'react-filepond'
-import 'filepond/dist/filepond.min.css'
 import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import { useForm } from 'react-hook-form'
 import { useAddCustomerMutation } from '../../../redux/features/customer/customerApi'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-// import { IoCloseOutline } from 'react-icons/io5'
 
-// Register FilePond plugins if needed
-registerPlugin(/* plugins */)
+// import { IoCloseOutline } from 'react-icons/io5'
 export default function AddCustomer() {
-  // const [uploadedFiles, setUploadedFiles] = useState([])
   const [imagePreviews, setImagePreviews] = useState([])
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
   const [addCustomer, { isLoading }] = useAddCustomerMutation()
@@ -46,7 +40,7 @@ export default function AddCustomer() {
 
   const handleOnSubmit = async data => {
     try {
-      if (data.price < data.payment_price) {
+      if (Number(data.price) < Number(data.payment_price)) {
         return toast.error('Payment price would be lessthan price!')
       }
       const formData = new FormData()
@@ -59,10 +53,13 @@ export default function AddCustomer() {
       formData.append('number', data.number)
       formData.append('price', data.price)
       formData.append('payment_price', data.payment_price)
+      formData.append('delivery_date', data.delivery_date)
+      formData.append('reference_name', data.reference_name)
 
-      const due = data.price - data.payment_price
+      const due = Number(data.price) - Number(data.payment_price)
 
       formData.append('due_price', due)
+
 
       // Append uploaded file(s)
       for (let i = 0; i < data.images.length; i++) {
@@ -70,19 +67,17 @@ export default function AddCustomer() {
       }
 
       const res = await addCustomer(formData)
+      console.log(res)
       if (res?.data?.status === 200) {
         toast.success(res?.data?.message)
         navigate('/dashboard/all-customers')
+      } else if (res?.data?.status === 401) {
+        toast.error(res?.data?.errors[0])
       }
-
-      console.log(data)
-      console.log(res)
     } catch (error) {
       console.error(error)
     }
   }
-
-  console.log(imagePreviews)
 
   return (
     <section
@@ -125,57 +120,91 @@ export default function AddCustomer() {
                   </span>
                 )}
               </div>
-            </div>
-            <div className="flex gap-5">
-              <div className="mb-4 flex gap-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor="price"
-                    className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
-                  >
-                    Price
-                  </label>
-                  <input
-                    type="text"
-                    id="price"
-                    name="price"
-                    placeholder="Enter Price"
-                    className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                    {...register('price', {
-                      required: 'Must be provide Price',
-                    })}
-                  />
-                  {errors.price && (
-                    <span className="text-red-500">
-                      {errors.price?.message}
-                    </span>
-                  )}
-                </div>
+              <div className="flex-1">
+                <label
+                  htmlFor="reference_name"
+                  className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+                >
+                  Reference Name(Optional)
+                </label>
+                <input
+                  type="text"
+                  id="reference_name"
+                  name="reference_name"
+                  placeholder="Enter Reference Name"
+                  className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                  {...register('reference_name', {
+                    required: 'Reference Name is required!',
+                  })}
+                />
+                {errors.reference_name && (
+                  <span className="text-red-500">
+                    {errors.reference_name?.message}
+                  </span>
+                )}
               </div>
-              <div className="mb-4 flex gap-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor="payment_price"
-                    className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
-                  >
-                    Payment Price
-                  </label>
-                  <input
-                    type="text"
-                    id="payment_price"
-                    name="payment_Price"
-                    placeholder="Enter Payment Price"
-                    className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                    {...register('payment_price', {
-                      required: 'Must be provide Payment Price',
-                    })}
-                  />
-                  {errors.payment_price && (
-                    <span className="text-red-500">
-                      {errors.payment_price?.message}
-                    </span>
-                  )}
-                </div>
+            </div>
+            <div className="mb-4 flex gap-4">
+              <div className="flex-1">
+                <label
+                  htmlFor="price"
+                  className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+                >
+                  Price
+                </label>
+                <input
+                  type="text"
+                  id="price"
+                  name="price"
+                  placeholder="Enter Price"
+                  className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                  {...register('price', {
+                    required: 'Must be provide Price',
+                  })}
+                />
+                {errors.price && (
+                  <span className="text-red-500">{errors.price?.message}</span>
+                )}
+              </div>
+              <div className="flex-1">
+                <label
+                  htmlFor="payment_price"
+                  className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+                >
+                  Payment Price
+                </label>
+                <input
+                  type="text"
+                  id="payment_price"
+                  name="payment_Price"
+                  placeholder="Enter Payment Price"
+                  className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                  {...register('payment_price', {
+                    required: 'Must be provide Payment Price',
+                  })}
+                />
+                {errors.payment_price && (
+                  <span className="text-red-500">
+                    {errors.payment_price?.message}
+                  </span>
+                )}
+              </div>
+              <div className="flex-1">
+                <label
+                  htmlFor="delivery_date"
+                  className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+                >
+                  Delivery Date
+                </label>
+                <input
+                  className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+                  type="date"
+                  name="delivery_date"
+                  id="delivery_date"
+                  {...register('delivery_date', {
+                    required: 'Delivery date must be provide',
+                  })}
+                />
               </div>
             </div>
 
@@ -240,7 +269,9 @@ export default function AddCustomer() {
           </div>
         </div>
 
-        <div className="lg:w-[50%] w-full bg-lightColor py-5 rounded">
+        <div
+          className={`lg:w-[50%]  w-full py-5 rounded ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText '}`}
+        >
           {/* select 2 */}
           <div className="px-9">
             <h2 className="text-2xl font-bold mb-4">Customer Information</h2>
