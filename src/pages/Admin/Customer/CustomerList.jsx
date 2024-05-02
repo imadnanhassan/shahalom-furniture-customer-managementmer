@@ -181,7 +181,7 @@ export default function CustomerList() {
 
               <tbody className="divide-y divide-gray-200">
                 {getData?.customers?.map((item, index) => (
-                  <tr key={item.id}>
+                  <tr key={item?.id}>
                     <td className="p-2">
                       <input
                         type="checkbox"
@@ -232,9 +232,9 @@ export default function CustomerList() {
                         className={`w-[50px] h-[50px] mx-auto rounded-md p-2 ${isDarkMode ? 'bg-[#131A26]' : 'bg-[#f2f2f3]'}`}
                       >
                         <img
-                          src={`${imagePath}/${item?.images[0].name}`}
+                          src={`${imagePath}/${item?.images[0]?.name}`}
                           alt=""
-                          className="w-full"
+                          className="w-full h-full object-cover"
                         />
                       </div>
                     </td>
