@@ -1,37 +1,58 @@
 import { useSelector } from 'react-redux'
 // import { RiShoppingCartLine } from 'react-icons/ri'
-import { MdOutlineShoppingBag } from 'react-icons/md'
+// import { MdOutlineShoppingBag } from 'react-icons/md'
 import { FaUser } from 'react-icons/fa'
 import { AiFillDollarCircle } from 'react-icons/ai'
-import { GiStabbedNote } from 'react-icons/gi'
-import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
+// import { GiStabbedNote } from 'react-icons/gi'
 import ColumnChart from '../../../components/ColumnChart/ColumnChart'
 // import TotalOrder from './TotalOrder'
 // import TopCategory from './TopCategory'
 // import TopBrands from './TopBrands'
 import AreaCharts from '../../../components/ColumnChart/AreaCharts'
 import { useGetFinancialQuery } from '../../../redux/features/financial/financialApi'
-
-const pageTitle = 'Dashboard'
-const productLinks = [{ title: <></>, link: '/' }]
+import { useState } from 'react'
+import { numberWithCommas } from '../../../utils/thousandSeperator'
 
 const Dashboard = () => {
+  const [selectedValue, setSelectedValue] = useState(0)
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
   const query = {}
-  query['day'] = 7
-  query['month'] = 0
-  query['year'] = 0
+  query['day'] = Number(selectedValue)
   const { data, isLoading } = useGetFinancialQuery(query)
 
   if (isLoading) {
     return null
   }
-
   return (
     <section
       className={`main-container ${isDarkMode ? 'bg-darkColorBody' : 'bg-lightColorBody'}`}
     >
-      <Breadcrumbs title={pageTitle} breadcrumbs={productLinks} />
+      <div className="mb-5">
+        <div
+          className={`py-3 px-10 flex item-center justify-between rounded ${isDarkMode ? 'bg-darkColorCard' : 'bg-lightColor'}`}
+        >
+          <h2
+            className={`lg:text-lg sm:text-[14px] text-[14px] font-semibold mt-[6px]  ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
+          >
+            Dashboard
+          </h2>
+          <div>
+            <select
+              onChange={e => setSelectedValue(e.target.value)}
+              name="option"
+              id="option"
+              className={`form-control p-2 border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
+            >
+              <option value={0}>Every Time</option>
+              <option value={1}>Today</option>
+              <option value={7}>One Week</option>
+              <option value={30}>One Month</option>
+              <option value={180}>6 Months</option>
+              <option value={365}>This Year</option>
+            </select>
+          </div>
+        </div>
+      </div>
       {/* total info */}
       <div className="md:grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5 ">
         <div
@@ -39,7 +60,7 @@ const Dashboard = () => {
         >
           <div className="dashboardCard">
             <div className="bg-[#EFF6FE] px-4 py-3 rounded flex flex-col items-center justify-center">
-              <MdOutlineShoppingBag className="text-[32px] bg-[#60A5FA] rounded text-white p-2" />
+              <FaUser className="text-[32px] bg-[#F43F5E] rounded text-white p-2" />
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
@@ -48,11 +69,11 @@ const Dashboard = () => {
               <p
                 className={`text-[20px]  font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
               >
-                {data?.financial_data?.total_customer}
+                {numberWithCommas(data?.financial_data?.total_customer)}
               </p>
-              <p className="text-[12px]">
+              {/* <p className="text-[12px]">
                 Increased by <strong className="text-error-100">-12.2%</strong>
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
@@ -62,7 +83,7 @@ const Dashboard = () => {
         >
           <div className="dashboardCard">
             <div className="bg-[#FEEBEF] px-4 py-3 rounded flex flex-col items-center justify-center">
-              <FaUser className="text-[32px] bg-[#F43F5E] rounded text-white p-2" />
+              <AiFillDollarCircle className="text-[32px] bg-[#4ba9e9] rounded text-white p-2" />
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
@@ -71,12 +92,12 @@ const Dashboard = () => {
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
               >
-                {data.financial_data?.total_price}
+                {numberWithCommas(data.financial_data?.total_price)}
               </p>
-              <p className="text-[12px]">
+              {/* <p className="text-[12px]">
                 Increased by{' '}
                 <strong className="text-success-300">+12.2%</strong>
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
@@ -86,7 +107,7 @@ const Dashboard = () => {
         >
           <div className="dashboardCard">
             <div className="bg-[#FDF7E6] px-4 py-3 rounded flex flex-col items-center justify-center">
-              <AiFillDollarCircle className="text-[32px] bg-[#EAB308] rounded text-white p-2" />
+              <AiFillDollarCircle className="text-[32px] bg-[#35d69e] rounded text-white p-2" />
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
@@ -95,12 +116,12 @@ const Dashboard = () => {
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
               >
-                {data?.financial_data?.income}
+                {numberWithCommas(data?.financial_data?.income)}
               </p>
-              <p className="text-[12px]">
+              {/* <p className="text-[12px]">
                 Increased by{' '}
                 <strong className="text-success-300">+12.2%</strong>
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
@@ -110,7 +131,7 @@ const Dashboard = () => {
         >
           <div className="dashboardCard">
             <div className="bg-[#EDF1FA] px-4 py-3 rounded flex flex-col items-center justify-center">
-              <GiStabbedNote className="text-[32px] bg-[#4C75CF] rounded text-white p-2" />
+              <AiFillDollarCircle className="text-[32px] bg-[#f7d74c] rounded text-white p-2" />
             </div>
             <div className="md:mt-2">
               <p className="lg:text-[14px] md:text-[12px] font-normal lg:mb-1 md:mb-[2px]">
@@ -119,12 +140,12 @@ const Dashboard = () => {
               <p
                 className={`text-[20px] font-medium mb-1 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText'}`}
               >
-                {data?.financial_data?.due_price}
+                {numberWithCommas(data?.financial_data?.due_price)}
               </p>
-              <p className="text-[12px]">
+              {/* <p className="text-[12px]">
                 Increased by{' '}
                 <strong className="text-success-300">+12.2%</strong>
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
@@ -184,12 +205,12 @@ const Dashboard = () => {
         <div
           className={` rounded w-full py-5 px-5 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText '}`}
         >
-          <ColumnChart monthlyDatas={data?.monthly} />
+          <ColumnChart monthlyDatas={data?.monthly_data} />
         </div>
         <div
           className={` rounded w-full py-5 px-5 ${isDarkMode ? 'bg-darkColorCard text-darkColorText' : 'bg-lightColor text-lightColorText '}`}
         >
-          <AreaCharts />
+          <AreaCharts financialData={data?.monthly_data} />
         </div>
       </div>
 

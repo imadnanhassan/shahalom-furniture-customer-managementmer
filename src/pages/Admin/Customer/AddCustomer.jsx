@@ -59,19 +59,17 @@ export default function AddCustomer() {
 
       formData.append('due_price', due)
 
-
       // Append uploaded file(s)
       for (let i = 0; i < data.images.length; i++) {
         formData.append('images[]', data.images[i])
       }
 
       const res = await addCustomer(formData)
-      console.log(res)
       if (res?.data?.status === 200) {
         toast.success(res?.data?.message)
         navigate('/dashboard/all-customers')
       } else if (res?.data?.status === 401) {
-        toast.error(res?.data?.errors[0])
+        res?.data?.errors.forEach(errorItem => toast.error(errorItem))
       }
     } catch (error) {
       console.error(error)
@@ -143,6 +141,7 @@ export default function AddCustomer() {
                 )}
               </div>
             </div>
+            
             <div className="mb-4 flex gap-4">
               <div className="flex-1">
                 <label

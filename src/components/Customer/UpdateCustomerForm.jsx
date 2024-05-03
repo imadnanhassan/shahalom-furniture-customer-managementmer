@@ -251,7 +251,7 @@ const UpdateCustomerForm = ({ customer, id }) => {
                   {...register('images')}
                   multiple
                 />
-                <div className="mt-4 flex items-center  relative ">
+                <div className="mt-4 grid grid-cols-5 gap-3 items-center  relative ">
                   {imagePreviews.map((preview, index) => (
                     <div key={index}>
                       <img

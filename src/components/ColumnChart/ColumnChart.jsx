@@ -2,29 +2,29 @@ import React from 'react'
 import Chart from 'react-apexcharts'
 
 export default function ColumnChart({ isDarkMode, monthlyDatas }) {
-  const months = Array.from({ length: 12 }, (_, i) => i + 1) // Assuming data for 12 months
+  // const months = Array.from({ length: 12 }, (_, i) => i + 1) // Assuming data for 12 months
 
   // Function to generate series data for each type (Total Price, Payment Price, Due Price)
-  const generateSeriesData = type => {
-    return months.map(month => {
-      const dataObj = monthlyDatas.find(data => data.month === month)
-      return dataObj ? dataObj[type] / 1 : 0 // Dividing by 1000 for better visualization on the chart
-    })
-  }
+  // const generateSeriesData = type => {
+  //   return months.map(month => {
+  //     const dataObj = monthlyDatas.find(data => data.month === month)
+  //     return dataObj ? dataObj[type] / 1 : 0 // Dividing by 1000 for better visualization on the chart
+  //   })
+  // }
 
   const chartData = {
     series: [
       {
         name: 'Total Price',
-        data: generateSeriesData("total_price"),
+        data: monthlyDatas?.total_price,
       },
       {
         name: 'Payment Price',
-        data: generateSeriesData("payment_price"),
+        data: monthlyDatas?.income,
       },
       {
         name: 'Due Price',
-        data: generateSeriesData("due"),
+        data: monthlyDatas?.due_price,
       },
     ],
     options: {

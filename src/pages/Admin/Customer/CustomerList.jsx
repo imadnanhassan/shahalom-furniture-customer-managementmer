@@ -19,8 +19,8 @@ import {
 } from '../../../redux/features/customer/customerApi'
 import SingleCustomerDetails from './SingleCustomerDetails'
 import { imagePath } from '../../../helper/imagePath'
-import { toast } from 'react-toastify'
 import PreLoader from '../../../common/Loader/PreLoader'
+import Swal from 'sweetalert2'
 
 export default function CustomerList() {
   const [customer, setCustomer] = useState({})
@@ -57,10 +57,21 @@ export default function CustomerList() {
   ]
 
   const handleDeleteCustomer = async id => {
-    const res = await deleteCustomer(id)
-    if (res?.data?.status === 200) {
-      toast.success(res?.data?.message)
-    }
+    Swal.fire({
+      title: 'Do you want to Delete?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      denyButtonText: `No`,
+    }).then(result => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        deleteCustomer(id)
+        Swal.fire('Deleted!', '', 'success')
+      } else if (result.isDenied) {
+        Swal.fire('Changes are not deleted')
+      }
+    })
   }
 
   // open moda
@@ -88,7 +99,7 @@ export default function CustomerList() {
         className={`px-5 py-5 rounded  ${isDarkMode ? 'bg-darkColorCard' : 'bg-lightColor'}`}
       >
         {/* search customer and add customer */}
-        <div className="flex items-center justify-between gap-6 py-3 ">
+        <div className="flex items-center justify-between gap-6 py-3">
           <div className="search flex items-center gap-5">
             <div
               className={` rounded-md flex items-center justify-between border border-[#4800C9] ${isDarkMode ? 'text-darkColorText ' : 'bg-[#ffffff]'}`}
@@ -97,7 +108,10 @@ export default function CustomerList() {
                 type="search"
                 className={`py-3 pl-4 pr-2 bg-transparent w-full focus:outline-none ${isDarkMode ? 'placeholder:text-slate-400' : 'placeholder:text-textColor'}`}
                 placeholder="Search Customer"
-                onChange={e => setSearchValue(e.target.value)}
+                onChange={e => {
+                  setSearchValue(e.target.value)
+                  setPage(1)
+                }}
                 value={searchValue}
               />
               <button className="btn mt-0 rounded-[0px] rounded-r-md px-3">
@@ -119,9 +133,9 @@ export default function CustomerList() {
         {/* customer table */}
 
         <div className="py-5">
-          <div className="overflow-x-scroll px-3">
+          <div className="px-3 lg:px-0">
             <table
-              className={`min-w-full border  ${isDarkMode ? 'border-darkColorBody' : 'border-gray-200 divide-y divide-gray-200'}`}
+              className={`min-w-full overflow-x-scroll border  ${isDarkMode ? 'border-darkColorBody' : 'border-gray-200 divide-y divide-gray-200'}`}
             >
               <thead
                 className={`${isDarkMode ? 'bg-[#131A26]' : 'bg-gray-100'}`}
@@ -171,7 +185,7 @@ export default function CustomerList() {
                     Delivery Date
                   </th>
                   <th
-                    className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
+                    className={`border-l pl-2 py-3 text-center text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
                     Action
                   </th>
@@ -247,7 +261,7 @@ export default function CustomerList() {
                       </span>
                     </td>
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-center space-x-2">
                         <button
                           onClick={() => {
                             setCustomer(item)
@@ -286,13 +300,23 @@ export default function CustomerList() {
           </div>
         </div>
 
-        <Pagination
-          currentPage={page}
-          totalDatas={getData?.count}
-          itemsPerPage={itemsPerPage}
-          setItemsPerPage={setItemsPerPage}
-          setPage={setPage}
-        />
+        {getData?.count <= 0 && (
+          <div>
+            <p className="text-center text-red-500 text-2xl py-10">
+              There is no data
+            </p>
+          </div>
+        )}
+
+        {getData?.count > 0 && (
+          <Pagination
+            currentPage={page}
+            totalDatas={getData?.count}
+            itemsPerPage={itemsPerPage}
+            setItemsPerPage={setItemsPerPage}
+            setPage={setPage}
+          />
+        )}
       </div>
     </section>
   )
