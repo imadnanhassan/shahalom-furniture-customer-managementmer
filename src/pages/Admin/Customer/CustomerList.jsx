@@ -81,7 +81,7 @@ export default function CustomerList() {
   // close modal
   const closeModal = () => {
     setModalOpen(false)
-    setImages(null);
+    setImages(null)
   }
 
   if (isLoading) {
@@ -156,6 +156,11 @@ export default function CustomerList() {
                   <th
                     className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
+                    Ref. Name
+                  </th>
+                  <th
+                    className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
+                  >
                     Number
                   </th>
                   <th
@@ -169,7 +174,7 @@ export default function CustomerList() {
                     Invoice No.
                   </th>
                   <th
-                    className={`w-[300px] border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
+                    className={`whitespace-nowrap w-[100px] border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
                     Product Details
                   </th>
@@ -182,6 +187,11 @@ export default function CustomerList() {
                     className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
                     Delivery Date
+                  </th>
+                  <th
+                    className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
+                  >
+                    Status
                   </th>
                   <th
                     className={`border-l pl-2 py-3 text-center text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
@@ -204,7 +214,14 @@ export default function CustomerList() {
                     </td>
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
                       <h6
-                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                        className={`text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                      >
+                        {item?.name}
+                      </h6>
+                    </td>
+                    <td className="border-l pl-2 py-4 whitespace-nowrap">
+                      <h6
+                        className={`text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                       >
                         {item?.name}
                       </h6>
@@ -230,9 +247,9 @@ export default function CustomerList() {
                         {item?.invoice_number}
                       </h6>
                     </td>
-                    <td className=" border-l pl-2 py-4 whitespace-nowrap">
+                    <td className="border-l pl-2 py-4">
                       <h6
-                        className={`w-[300px] text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                        className={`w-[200px] text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                       >
                         {item?.product_details}
                       </h6>
@@ -259,6 +276,24 @@ export default function CustomerList() {
                       >
                         {item?.delivery_date}
                       </span>
+                    </td>
+                    <td
+                      className={`border-l pl-2 py-2 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                    >
+                      <label
+                        for={item?.id}
+                        className="inline-flex items-center space-x-4 cursor-pointer dark:text-gray-100"
+                      >
+                        <span className="relative">
+                          <input
+                            id={item?.id}
+                            type="checkbox"
+                            className="hidden peer"
+                          />
+                          <div className="w-10 h-6 rounded-full shadow-inner dark:bg-gray-400 peer-checked:dark:bg-green-500"></div>
+                          <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto dark:bg-gray-700"></div>
+                        </span>
+                      </label>
                     </td>
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
                       <div className="flex items-center justify-center space-x-2">
@@ -318,12 +353,7 @@ export default function CustomerList() {
         )}
       </div>
 
-      {images && (
-        <ImagePreviews
-          onClose={closeModal}
-          images={images}
-        />
-      )}
+      {images && <ImagePreviews onClose={closeModal} images={images} />}
     </section>
   )
 }
