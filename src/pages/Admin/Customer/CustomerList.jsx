@@ -21,14 +21,15 @@ import SingleCustomerDetails from './SingleCustomerDetails'
 import { imagePath } from '../../../helper/imagePath'
 import PreLoader from '../../../common/Loader/PreLoader'
 import Swal from 'sweetalert2'
+import ImagePreviews from './ImagePreviews'
 
 export default function CustomerList() {
   const [customer, setCustomer] = useState({})
+  const [images, setImages] = useState(null)
   const [searchValue, setSearchValue] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [modalOpen, setModalOpen] = useState(false)
-  const [selectedId, setSelectedId] = useState(null)
 
   const { selectAll, checkboxes } = useSelector(state => state.checkBox)
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
@@ -58,11 +59,10 @@ export default function CustomerList() {
 
   const handleDeleteCustomer = async id => {
     Swal.fire({
+      icon: 'warning',
       title: 'Do you want to Delete?',
-      showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: 'Yes',
-      denyButtonText: `No`,
     }).then(result => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
@@ -75,14 +75,13 @@ export default function CustomerList() {
   }
 
   // open moda
-  const openModal = id => {
-    setSelectedId(id)
+  const openModal = () => {
     setModalOpen(true)
   }
   // close modal
   const closeModal = () => {
     setModalOpen(false)
-    setSelectedId(null)
+    setImages(null);
   }
 
   if (isLoading) {
@@ -242,7 +241,8 @@ export default function CustomerList() {
                       className={`border-l  py-2 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                     >
                       <div
-                        className={`w-[50px] h-[50px] mx-auto rounded-md p-2 ${isDarkMode ? 'bg-[#131A26]' : 'bg-[#f2f2f3]'}`}
+                        className={`w-[50px] h-[50px] cursor-pointer mx-auto rounded-md p-2 ${isDarkMode ? 'bg-[#131A26]' : 'bg-[#f2f2f3]'}`}
+                        onClick={() => setImages(item?.images)}
                       >
                         <img
                           src={`${imagePath}/${item?.images[0]?.name}`}
@@ -275,7 +275,6 @@ export default function CustomerList() {
                         <SingleCustomerDetails
                           isOpen={modalOpen}
                           onClose={closeModal}
-                          selectedId={selectedId}
                           customer={customer}
                         />
 
@@ -318,6 +317,13 @@ export default function CustomerList() {
           />
         )}
       </div>
+
+      {images && (
+        <ImagePreviews
+          onClose={closeModal}
+          images={images}
+        />
+      )}
     </section>
   )
 }

@@ -1,18 +1,33 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function Pagination({
   totalDatas,
-  // handlePageChange,
   setPage,
   currentPage,
   itemsPerPage,
   setItemsPerPage,
 }) {
-  // const [selectedItems, setSelectedItems] = useState(10) // Default to 10 items
+  const [visiblePages, setVisiblePages] = useState([]);
+  const pagesToShow = 5;// Default to 10 items
   const totalPages = Math.ceil(totalDatas / itemsPerPage)
   const startItemIndex = (currentPage - 1) * itemsPerPage + 1
   const endItemIndex = Math.min(currentPage * itemsPerPage, totalDatas)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  useEffect(() => {
+    const calculateVisiblePages = () => {
+      const startPage = Math.max(1, currentPage - Math.floor(pagesToShow / 2));
+      const endPage = Math.min(totalPages, startPage + pagesToShow - 1);
+
+      const newVisiblePages = Array.from(
+        { length: endPage - startPage + 1 },
+        (_, i) => startPage + i
+      );
+      setVisiblePages(newVisiblePages);
+    };
+
+    calculateVisiblePages();
+  }, [currentPage, totalPages, pagesToShow]);
 
   const handleItemClick = items => {
     setItemsPerPage(items)
@@ -108,7 +123,7 @@ export default function Pagination({
         </button>
 
         {/* Pagination buttons */}
-        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+        {visiblePages.map(
           pageNumber => (
             <button
               key={pageNumber}

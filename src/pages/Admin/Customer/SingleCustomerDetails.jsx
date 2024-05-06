@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react'
 import { RxCross1 } from 'react-icons/rx'
 import { imagePath } from '../../../helper/imagePath'
 import { useReactToPrint } from 'react-to-print'
+import { numberWithCommas } from '../../../utils/thousandSeperator'
 
 export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
   const [createDate, setCreateDate] = useState(null)
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null)
   const formatDate = () => {
     const date = new Date()
     const options = {
@@ -27,17 +29,18 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
 
   useEffect(() => {
     if (customer && customer.created_at) {
-      const dateString = customer.created_at;
-      const dateObj = new Date(dateString);
+      const dateString = customer.created_at
+      const dateObj = new Date(dateString)
 
-      if (!isNaN(dateObj.getTime())) { // Check if the date is valid
-        const formattedDate = dateObj.toISOString().split('T')[0];
-        setCreateDate(formattedDate);
+      if (!isNaN(dateObj.getTime())) {
+        // Check if the date is valid
+        const formattedDate = dateObj.toISOString().split('T')[0]
+        setCreateDate(formattedDate)
       } else {
-        setError('Invalid date format');
+        setError('Invalid date format')
       }
     }
-  }, [customer]); // Run this effect whenever 'customer' changes
+  }, [customer]) // Run this effect whenever 'customer' changes
   return (
     <>
       {isOpen && (
@@ -54,11 +57,14 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
             </div>
             <div
               ref={componentRef}
-              className="w-[842px] h-auto mx-auto border rounded px-2 py-5"
+              className="w-[842px] h-auto mx-auto rounded px-2 py-5"
             >
               <h5 className="text-center">Invoice</h5>
               <h1 className="text-2xl text-center mb-3 font-bold">
                 Shah Alam Furniture
+              </h1>
+              <h1 className="text-xl text-center mb-3 font-semibold">
+                Pr. Md. Shohel
               </h1>
               <address className="text-center text-wrap">
                 Sonargaon janapath road, sector # 13, moilar mor, Uttara model
@@ -106,64 +112,86 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
                   </tr>
                 </tbody>
               </table>
-              <div className="mt-5 overflow-x-auto rounded bg-gray-200">
-                <table className="min-w-full divide-y divide-gray-200 text-sm">
+              <div className="mt-5 overflow-x-auto rounded bg-gray-50">
+                <table className="min-w-full text-sm">
                   <thead>
-                    <tr>
+                    <tr className={`${'bg-gray-50'} border-b`}>
                       <th className="whitespace-nowrap px-4 py-2 font-semibold text-left">
                         #SL
                       </th>
-                      <th className="whitespace-nowrap px-4 py-2 font-semibold text-center">
+                      <th className="px-4 py-2 font-semibold text-center">
                         Product Details
-                      </th>
-                      <th className="whitespace-nowrap px-4 py-2 font-semibold text-center"></th>
-                      <th className="whitespace-nowrap px-4 py-2 font-semibold text-right">
-                        Price
                       </th>
                     </tr>
                   </thead>
 
-                  <tbody className="divide-y divide-gray-200">
-                    <tr className={`border-b`}>
+                  <tbody>
+                    <tr className={`${'bg-gray-50'} border-b`}>
                       <td className="whitespace-nowrap px-4 py-2 text-wrap inline-block">
                         #
                       </td>
-                      <td className="whitespace-nowrap px-4 py-2 text-center">
-                        {customer?.product_details}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-2 text-center">
-                        Total
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-2 text-right">
-                        {customer?.price}
-                      </td>
-                    </tr>
-                    <tr className={`${'bg-gray-200'} border-b`}>
-                      <td className="whitespace-nowrap px-4 py-2 text-wrap inline-block">
-                        #
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-2 text-center"></td>
-                      <td className="whitespace-nowrap px-4 py-2 text-center">
-                        Payment Price
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-2 text-right">
-                        {customer?.payment_price}
-                      </td>
-                    </tr>
-                    <tr className={`${'bg-gray-200'} border-b`}>
-                      <td className="whitespace-nowrap px-4 py-2 text-wrap inline-block">
-                        #
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-2 text-center"></td>
-                      <td className="whitespace-nowrap px-4 py-2 text-center">
-                        Due Price
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-2 text-right">
-                        {customer?.due_price}
+                      <td className="px-4 py-2 text-center">
+                        <p className="text-wrap">{customer?.product_details}</p>
                       </td>
                     </tr>
                   </tbody>
                 </table>
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className={`${'bg-gray-50'} border-b`}>
+                      <th className="whitespace-nowrap px-4 py-2 font-semibold text-left"></th>
+                      <th className="whitespace-nowrap px-4 py-2 font-semibold text-center"></th>
+                      <th className="whitespace-nowrap px-4 py-2 font-semibold text-center"></th>
+                      <th className="whitespace-nowrap px-4 py-2 font-semibold text-right">
+                        price
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr className={`${'bg-gray-50'} border-b`}>
+                      <td className="whitespace-nowrap px-4 py-1 text-wrap inline-block"></td>
+                      <td className="whitespace-nowrap px-4 py-1 text-center"></td>
+                      <td className="whitespace-nowrap px-4 py-1 text-center">
+                        Total
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-1 text-right">
+                        {numberWithCommas(customer?.price)}৳
+                      </td>
+                    </tr>
+                    <tr className={`${'bg-gray-50'} border-b`}>
+                      <td className="whitespace-nowrap px-4 py-1 text-wrap inline-block"></td>
+                      <td className="whitespace-nowrap px-4 py-1 text-center"></td>
+                      <td className="whitespace-nowrap px-4 py-1 text-center">
+                        Payment Price
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-1 text-right">
+                        {numberWithCommas(customer?.payment_price)}৳
+                      </td>
+                    </tr>
+                    <tr className={`${'bg-gray-50'} border-b`}>
+                      <td className="whitespace-nowrap px-4 py-1 text-wrap inline-block"></td>
+                      <td className="whitespace-nowrap px-4 py-1 text-center"></td>
+                      <td className="whitespace-nowrap px-4 py-1 text-center">
+                        Due Price
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-1 text-right">
+                        {numberWithCommas(customer?.due_price)}৳
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4 flex flex-wrap items-center  relative ">
+                {customer?.images.map((preview, index) => (
+                  <div key={index}>
+                    <img
+                      src={`${imagePath}/${preview?.name}`}
+                      alt={`Preview ${index}`}
+                      className="h-36 mr-1 mb-2 object-contian rounded "
+                    />
+                  </div>
+                ))}
               </div>
               <p className="mt-5">
                 All information generated from{' '}
@@ -172,17 +200,6 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
                 </span>{' '}
                 at {formatDate()}
               </p>
-              <div className="mt-4 grid grid-cols-6 gap-3 items-center  relative ">
-                {customer?.images.map((preview, index) => (
-                  <div key={index}>
-                    <img
-                      src={`${imagePath}/${preview?.name}`}
-                      alt={`Preview ${index}`}
-                      className="h-36 mr-2 mb-2 border rounded "
-                    />
-                  </div>
-                ))}
-              </div>
             </div>
             <div className="flex justify-end pr-8">
               <button
