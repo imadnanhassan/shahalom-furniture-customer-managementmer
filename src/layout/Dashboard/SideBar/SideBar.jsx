@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { GoHome } from 'react-icons/go'
 // import { RiFileUploadFill } from 'react-icons/ri'
 
@@ -51,6 +51,7 @@ const menuItems = [
 
 export default function SideBar({ isSideBarOpen }) {
   const { logout } = useContext(AuthContext)
+  const path = useLocation()
   return (
     <aside
       className={` main-content overflow-y-auto bg-sideBarColor  
@@ -625,7 +626,7 @@ export default function SideBar({ isSideBarOpen }) {
 
               {/* Customer */}
               <li>
-                <details className="group [&_summary::-webkit-details-marker]:hidden">
+                <details open={true} className="group [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex gap-3 cursor-pointer items-center  mb-1 px-8 py-2 text-white hover:bg-gray-100 hover:text-gray-700 ">
                     <span>
                       <FaUserFriends />
@@ -654,7 +655,7 @@ export default function SideBar({ isSideBarOpen }) {
                     <li>
                       <NavLink
                         to={'dashboard/all-customers'}
-                        className="relative flex flex-row items-center h-9 focus:outline-none text-white hover:bg-[#3a3f50] hover:text-gray-100 transition-all duration-300 pl-6"
+                        className={`${path?.pathname === '/dashboard/all-customers' && 'bg-[#3a3f50] text-gray-100 '} relative flex flex-row items-center h-9 focus:outline-none text-white hover:bg-[#3a3f50] hover:text-gray-100 transition-all duration-300 pl-6`}
                       >
                         <span className="inline-flex justify-center items-center ml-8">
                           <FaCircleNotch className="text-[10px]" />
@@ -667,7 +668,7 @@ export default function SideBar({ isSideBarOpen }) {
                     <li>
                       <Link
                         to={'dashboard/add-customer'}
-                        className="relative flex flex-row items-center h-9 focus:outline-none text-white hover:bg-[#3a3f50] hover:text-gray-100 transition-all duration-300 pl-6"
+                        className={`${path?.pathname === '/dashboard/add-customer' && 'bg-[#3a3f50] text-gray-100 '} relative flex flex-row items-center h-9 focus:outline-none text-white hover:bg-[#3a3f50] hover:text-gray-100 transition-all duration-300 pl-6`}
                       >
                         <span className="inline-flex justify-center items-center ml-8">
                           <FaCircleNotch className="text-[10px]" />

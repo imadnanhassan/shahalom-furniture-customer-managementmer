@@ -19,16 +19,17 @@ import {
 } from '../../../redux/features/customer/customerApi'
 import SingleCustomerDetails from './SingleCustomerDetails'
 import { imagePath } from '../../../helper/imagePath'
-import { toast } from 'react-toastify'
 import PreLoader from '../../../common/Loader/PreLoader'
+import Swal from 'sweetalert2'
+import ImagePreviews from './ImagePreviews'
 
 export default function CustomerList() {
   const [customer, setCustomer] = useState({})
+  const [images, setImages] = useState(null)
   const [searchValue, setSearchValue] = useState('')
   const [page, setPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [modalOpen, setModalOpen] = useState(false)
-  const [selectedId, setSelectedId] = useState(null)
 
   const { selectAll, checkboxes } = useSelector(state => state.checkBox)
   const isDarkMode = useSelector(state => state.theme.isDarkMode)
@@ -57,21 +58,30 @@ export default function CustomerList() {
   ]
 
   const handleDeleteCustomer = async id => {
-    const res = await deleteCustomer(id)
-    if (res?.data?.status === 200) {
-      toast.success(res?.data?.message)
-    }
+    Swal.fire({
+      icon: 'warning',
+      title: 'Do you want to Delete?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+    }).then(result => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        deleteCustomer(id)
+        Swal.fire('Deleted!', '', 'success')
+      } else if (result.isDenied) {
+        Swal.fire('Changes are not deleted')
+      }
+    })
   }
 
   // open moda
-  const openModal = id => {
-    setSelectedId(id)
+  const openModal = () => {
     setModalOpen(true)
   }
   // close modal
   const closeModal = () => {
     setModalOpen(false)
-    setSelectedId(null)
+    setImages(null)
   }
 
   if (isLoading) {
@@ -88,7 +98,7 @@ export default function CustomerList() {
         className={`px-5 py-5 rounded  ${isDarkMode ? 'bg-darkColorCard' : 'bg-lightColor'}`}
       >
         {/* search customer and add customer */}
-        <div className="flex items-center justify-between gap-6 py-3 ">
+        <div className="flex items-center justify-between gap-6 py-3">
           <div className="search flex items-center gap-5">
             <div
               className={` rounded-md flex items-center justify-between border border-[#4800C9] ${isDarkMode ? 'text-darkColorText ' : 'bg-[#ffffff]'}`}
@@ -97,7 +107,10 @@ export default function CustomerList() {
                 type="search"
                 className={`py-3 pl-4 pr-2 bg-transparent w-full focus:outline-none ${isDarkMode ? 'placeholder:text-slate-400' : 'placeholder:text-textColor'}`}
                 placeholder="Search Customer"
-                onChange={e => setSearchValue(e.target.value)}
+                onChange={e => {
+                  setSearchValue(e.target.value)
+                  setPage(1)
+                }}
                 value={searchValue}
               />
               <button className="btn mt-0 rounded-[0px] rounded-r-md px-3">
@@ -119,9 +132,9 @@ export default function CustomerList() {
         {/* customer table */}
 
         <div className="py-5">
-          <div className="overflow-x-scroll px-3">
+          <div className="px-3 lg:px-0">
             <table
-              className={`min-w-full border  ${isDarkMode ? 'border-darkColorBody' : 'border-gray-200 divide-y divide-gray-200'}`}
+              className={`min-w-full overflow-x-scroll border  ${isDarkMode ? 'border-darkColorBody' : 'border-gray-200 divide-y divide-gray-200'}`}
             >
               <thead
                 className={`${isDarkMode ? 'bg-[#131A26]' : 'bg-gray-100'}`}
@@ -143,6 +156,11 @@ export default function CustomerList() {
                   <th
                     className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
+                    Ref. Name
+                  </th>
+                  <th
+                    className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
+                  >
                     Number
                   </th>
                   <th
@@ -156,7 +174,7 @@ export default function CustomerList() {
                     Invoice No.
                   </th>
                   <th
-                    className={`w-[300px] border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
+                    className={`whitespace-nowrap w-[100px] border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
                     Product Details
                   </th>
@@ -172,6 +190,11 @@ export default function CustomerList() {
                   </th>
                   <th
                     className={` border-l pl-2 py-3 text-left text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
+                  >
+                    Status
+                  </th>
+                  <th
+                    className={`border-l pl-2 py-3 text-center text-xs font-medium uppercase tracking-wider ${isDarkMode ? 'text-lightColor' : 'text-gray-500'}`}
                   >
                     Action
                   </th>
@@ -191,9 +214,18 @@ export default function CustomerList() {
                     </td>
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
                       <h6
-                        className={`text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                        className={`text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                       >
                         {item?.name}
+                      </h6>
+                    </td>
+                    <td className="border-l pl-2 py-4 whitespace-nowrap">
+                      <h6
+                        className={`text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                      >
+                        {item?.reference_name !== 'null'
+                          ? item?.reference_name
+                          : 'N/A'}
                       </h6>
                     </td>
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
@@ -217,9 +249,9 @@ export default function CustomerList() {
                         {item?.invoice_number}
                       </h6>
                     </td>
-                    <td className=" border-l pl-2 py-4 whitespace-nowrap">
+                    <td className="border-l pl-2 py-4">
                       <h6
-                        className={`w-[300px] text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                        className={`w-[200px] text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                       >
                         {item?.product_details}
                       </h6>
@@ -228,12 +260,13 @@ export default function CustomerList() {
                       className={`border-l  py-2 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                     >
                       <div
-                        className={`w-[50px] h-[50px] mx-auto rounded-md p-2 ${isDarkMode ? 'bg-[#131A26]' : 'bg-[#f2f2f3]'}`}
+                        className={`w-[50px] h-[50px] cursor-pointer mx-auto ${isDarkMode ? 'bg-[#131A26]' : 'bg-[#f2f2f3]'}`}
+                        onClick={() => setImages(item?.images)}
                       >
                         <img
                           src={`${imagePath}/${item?.images[0]?.name}`}
                           alt=""
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover rounded"
                         />
                       </div>
                     </td>
@@ -246,8 +279,26 @@ export default function CustomerList() {
                         {item?.delivery_date}
                       </span>
                     </td>
+                    <td
+                      className={`border-l pl-2 py-2 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
+                    >
+                      <label
+                        for={item?.id}
+                        className="inline-flex items-center space-x-4 cursor-pointer dark:text-gray-100"
+                      >
+                        <span className="relative">
+                          <input
+                            id={item?.id}
+                            type="checkbox"
+                            className="hidden peer"
+                          />
+                          <div className="w-10 h-6 rounded-full shadow-inner dark:bg-gray-400 peer-checked:dark:bg-green-500"></div>
+                          <div className="absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow peer-checked:right-0 peer-checked:left-auto dark:bg-gray-700"></div>
+                        </span>
+                      </label>
+                    </td>
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-center space-x-2">
                         <button
                           onClick={() => {
                             setCustomer(item)
@@ -261,7 +312,6 @@ export default function CustomerList() {
                         <SingleCustomerDetails
                           isOpen={modalOpen}
                           onClose={closeModal}
-                          selectedId={selectedId}
                           customer={customer}
                         />
 
@@ -286,14 +336,26 @@ export default function CustomerList() {
           </div>
         </div>
 
-        <Pagination
-          currentPage={page}
-          totalDatas={getData?.count}
-          itemsPerPage={itemsPerPage}
-          setItemsPerPage={setItemsPerPage}
-          setPage={setPage}
-        />
+        {getData?.count <= 0 && (
+          <div>
+            <p className="text-center text-red-500 text-2xl py-10">
+              There is no data
+            </p>
+          </div>
+        )}
+
+        {getData?.count > 0 && (
+          <Pagination
+            currentPage={page}
+            totalDatas={getData?.count}
+            itemsPerPage={itemsPerPage}
+            setItemsPerPage={setItemsPerPage}
+            setPage={setPage}
+          />
+        )}
       </div>
+
+      {images && <ImagePreviews onClose={closeModal} images={images} />}
     </section>
   )
 }

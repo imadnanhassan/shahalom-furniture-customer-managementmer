@@ -1,25 +1,28 @@
-import { FaBarsStaggered } from 'react-icons/fa6'
-import { IoLanguage } from 'react-icons/io5'
-import { CiDark } from 'react-icons/ci'
-// import { IoMdNotificationsOutline } from 'react-icons/io'
-import { CiLight } from 'react-icons/ci'
-// import userLogo from '../../assets/img/user/user-1.jpg'
 import { useState } from 'react'
-import { toggleMode } from '../../redux/features/themes/themeSlice'
-import { useDispatch, useSelector } from 'react-redux'
-import { RiFullscreenLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
-import Tooltip from '../../common/Tooltip/Tooltip'
+import { CiDark } from 'react-icons/ci'
+import { CiLight } from 'react-icons/ci'
 import { TbWorld } from 'react-icons/tb'
+import { IoLanguage } from 'react-icons/io5'
+import { RiFullscreenLine } from 'react-icons/ri'
+import { FaBarsStaggered } from 'react-icons/fa6'
+import Tooltip from '../../common/Tooltip/Tooltip'
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleMode } from '../../redux/features/themes/themeSlice'
+
+// import { AuthContext } from '../../context/context'
+// import userLogo from '../../assets/img/user/user-1.jpg'
+// import { IoMdNotificationsOutline } from 'react-icons/io'
 
 export default function HeaderMenu({ toggleSidebar }) {
+  // const {user} = useContext(AuthContext);
   // const [isOpenUser, setIsOpenUser] = useState(false)
-  // const [isOpenNotification, setIsOpenNotification] = useState(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const [isOpenNotification, setIsOpenNotification] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
 
-  const isDarkMode = useSelector(state => state.theme.isDarkMode)
   const dispatch = useDispatch()
+  const isDarkMode = useSelector(state => state.theme.isDarkMode)
 
   const handleToggle = () => {
     dispatch(toggleMode())
@@ -120,6 +123,9 @@ export default function HeaderMenu({ toggleSidebar }) {
         </div>
 
         <div className="flex gap-5">
+          {/* <span className="bg-Vindigo-100 px-2 py-2 rounded">
+            {user?.name}
+          </span> */}
           <span className="bg-Vindigo-100 px-2 py-2 rounded">
             <IoLanguage className="lg:text-[20px] text-[18px]" />
           </span>

@@ -5,7 +5,7 @@ import { AuthContext } from '../context/context'
 import { toast } from 'react-toastify'
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(false)
+  const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const token = getFromLocalStorage(authkey)
   useEffect(() => {
@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
         .then(res => res.json())
         .then(data => {
           if (data?.status === 200) {
-            setUser(true)
+            setUser(data?.user)
           }
           setLoading(false)
         })
@@ -40,16 +40,15 @@ const AuthProvider = ({ children }) => {
       .then(res => res.json())
       .then(data => {
         if (data?.status === 200) {
-          console.log(data)
           toast.success(data?.message)
-          setUser(true)
+          setUser(null)
         }
       })
       .catch(error => {
         console.error(error)
       })
     localStorage.removeItem(authkey)
-    setUser(false)
+    setUser(null)
   }
 
   const authInfo = {

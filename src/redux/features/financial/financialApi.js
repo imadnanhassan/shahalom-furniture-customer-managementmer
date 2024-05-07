@@ -11,7 +11,7 @@ export const financialApi = baseApi.injectEndpoints({
     // get all financial calculation
     getFinancial: build.query({
       query: (data) => ({
-        url: `${FINANCIAL_URL}?day=${data?.day}&month=${data?.month}&year=${data?.year}`,
+        url: `${FINANCIAL_URL}?day=${data?.day}`,
         headers: {
           Accept: 'application/json',
           Authorization: 'Bearer ' + token,
