@@ -223,7 +223,9 @@ export default function CustomerList() {
                       <h6
                         className={`text-wrap text-[13px] pb-1 font-medium ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                       >
-                        {item?.name}
+                        {item?.reference_name !== 'null'
+                          ? item?.reference_name
+                          : 'N/A'}
                       </h6>
                     </td>
                     <td className="border-l pl-2 py-4 whitespace-nowrap">
@@ -258,13 +260,13 @@ export default function CustomerList() {
                       className={`border-l  py-2 whitespace-nowrap ${isDarkMode ? 'text-lightColor' : 'text-textColor'}`}
                     >
                       <div
-                        className={`w-[50px] h-[50px] cursor-pointer mx-auto rounded-md p-2 ${isDarkMode ? 'bg-[#131A26]' : 'bg-[#f2f2f3]'}`}
+                        className={`w-[50px] h-[50px] cursor-pointer mx-auto ${isDarkMode ? 'bg-[#131A26]' : 'bg-[#f2f2f3]'}`}
                         onClick={() => setImages(item?.images)}
                       >
                         <img
                           src={`${imagePath}/${item?.images[0]?.name}`}
                           alt=""
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover rounded"
                         />
                       </div>
                     </td>

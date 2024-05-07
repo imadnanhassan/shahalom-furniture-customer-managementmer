@@ -11,10 +11,9 @@ import 'swiper/css/pagination'
 import { Pagination, Navigation } from 'swiper/modules'
 export default function ImagePreviews({ onClose, images }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/5 ">
-      <div className="relative overflow-hidden left-[10px] text-left bg-white rounded shadow w-full sm:w-6/12 p-6 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between">
-          <div></div>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/5 ">
+      <div className="relative overflow-hidden bg-white rounded shadow max-h-[90vh] w-full md:w-6/12">
+        <div className="absolute right-0 z-10">
           <button
             onClick={onClose}
             className="focus:outline-none transition-all duration-300 p-2 rounded-full bg-[#f43f5e1a] text-[#f43f5e] hover:bg-[#f43f5e] hover:text-lightColor"
@@ -22,7 +21,7 @@ export default function ImagePreviews({ onClose, images }) {
             <RxCross1 size={20} />
           </button>
         </div>
-        <div className="h-auto mx-auto px-2 py-5">
+        <div>
           <Swiper
             slidesPerView={1}
             spaceBetween={30}
@@ -39,7 +38,7 @@ export default function ImagePreviews({ onClose, images }) {
                 <img
                   src={`${imagePath}/${imgItem?.name}`}
                   alt={`Image ${imgItem?.id}`}
-                  className="object-contain"
+                  className="h-full w-full object-contain"
                 />
               </SwiperSlide>
             ))}
