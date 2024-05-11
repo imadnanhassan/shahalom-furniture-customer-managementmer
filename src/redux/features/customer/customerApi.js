@@ -37,7 +37,7 @@ export const customerApi = baseApi.injectEndpoints({
     //get all customer
     getCustomers: build.query({
       query: data => ({
-        url: `${CUSTOMER_URL}?page=${data?.page}&search=${data?.search}&perPage=${data?.perPage}`,
+        url: `${CUSTOMER_URL}?page=${data?.page}&search=${data?.search}&perPage=${data?.perPage}&reference_name=${data?.reference_name}`,
         headers: {
           Accept: 'application/json',
           Authorization: 'Bearer ' + token,
@@ -95,5 +95,5 @@ export const {
   useDeleteCustomerMutation,
   useUpdateCustomerMutation,
   useGetCustomerQuery,
-  useDeleteImageMutation
+  useDeleteImageMutation,
 } = customerApi

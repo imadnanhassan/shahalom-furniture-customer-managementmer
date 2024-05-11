@@ -45,7 +45,7 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
     <>
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/5 z-50">
-          <div className="relative bg-white rounded shadow max-h-[90vh] overflow-y-auto p-5">
+          <div className="relative bg-white rounded shadow max-h-[95vh] overflow-y-auto p-5">
             <div className="absolute right-0 top-0 z-10">
               <button
                 onClick={onClose}
@@ -60,7 +60,7 @@ export default function SingleCustomerDetails({ isOpen, onClose, customer }) {
             >
               <div className="bg-black h-[40px]"></div>
               <div className="bg-sky-500 absolute h-28 w-28 -top-14 -left-14 rotate-45"></div>
-              <div className='px-5'>
+              <div className="px-5">
                 <div className="flex justify-between">
                   <h1 className="text-5xl font-extrabold my-5 uppercase px-2">
                     Invoice
