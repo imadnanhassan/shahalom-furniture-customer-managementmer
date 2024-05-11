@@ -47,10 +47,7 @@ const UpdateCustomerForm = ({ customer, id }) => {
         data.product_details ? data.product_details : customer.product_details,
       )
       formData.append('name', data.name ? data.name : customer.name)
-      formData.append(
-        'location',
-        data.location ? data.location : customer.location,
-      )
+      formData.append('location', data.location ? data.location : '')
       formData.append('number', data.number ? data.number : customer.numbe)
       formData.append('price', data.price ? data.price : customer.price)
       formData.append(
@@ -59,11 +56,11 @@ const UpdateCustomerForm = ({ customer, id }) => {
       )
       formData.append(
         'reference_name',
-        data.reference_name ? data.reference_name : customer.reference_name,
+        data.reference_name ? data.reference_name : '',
       )
       formData.append(
         'delivery_date',
-        data.delivery_date ? data.delivery_date : customer.delivery_date,
+        data.delivery_date ? data.delivery_date : '',
       )
 
       const due = Number(data.price) - Number(data.payment_price)
@@ -199,7 +196,7 @@ const UpdateCustomerForm = ({ customer, id }) => {
                   htmlFor="delivery_date"
                   className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
                 >
-                  Delivery Date
+                  Delivery Date (Optional)
                 </label>
                 <input
                   className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
@@ -207,9 +204,7 @@ const UpdateCustomerForm = ({ customer, id }) => {
                   name="delivery_date"
                   id="delivery_date"
                   defaultValue={customer?.delivery_date}
-                  {...register('delivery_date', {
-                    required: 'Delivery date must be provide',
-                  })}
+                  {...register('delivery_date')}
                 />
               </div>
             </div>
@@ -229,11 +224,6 @@ const UpdateCustomerForm = ({ customer, id }) => {
                 className={`mt-1 p-3  border block w-full shadow-sm sm:text-sm  rounded-md  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText focus:outline-none' : 'text-gray-700 focus:outline-none focus:ring-indigo-500 focus:border-primaryColor hover:border-gray-400 border-gray-300'}`}
                 {...register('product_details')}
               ></textarea>
-              {errors.product_details && (
-                <span className="text-red-500">
-                  {errors.product_details?.message}
-                </span>
-              )}
             </div>
 
             <div className="mb-4 flex gap-4">
@@ -242,7 +232,7 @@ const UpdateCustomerForm = ({ customer, id }) => {
                   htmlFor="file"
                   className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
                 >
-                  Images
+                  Images (Optional)
                 </label>
                 <input
                   type="file"
@@ -267,9 +257,6 @@ const UpdateCustomerForm = ({ customer, id }) => {
                   ))}
                 </div>
               </div>
-              {errors.images && (
-                <span className="text-red-500">{errors.images?.message}</span>
-              )}
             </div>
           </div>
         </div>
@@ -310,7 +297,7 @@ const UpdateCustomerForm = ({ customer, id }) => {
                       className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
                       htmlFor="location"
                     >
-                      Location
+                      Location (Optional)
                     </label>
                     <input
                       type="text"
@@ -321,11 +308,6 @@ const UpdateCustomerForm = ({ customer, id }) => {
                       className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
                       {...register('location')}
                     />
-                    {errors.location && (
-                      <span className="text-red-500">
-                        {errors.location?.message}
-                      </span>
-                    )}
                   </div>
                 </div>
                 <div className="mb-4 flex gap-4">
@@ -345,11 +327,6 @@ const UpdateCustomerForm = ({ customer, id }) => {
                       className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
                       {...register('number')}
                     />
-                    {errors.number && (
-                      <span className="text-red-500">
-                        {errors.number?.message}
-                      </span>
-                    )}
                   </div>
                 </div>
               </div>

@@ -13,7 +13,7 @@ import { AuthContext } from '../../../context/context'
 // import { MdCampaign } from 'react-icons/md'
 // import { PiSlideshowFill } from 'react-icons/pi'
 
-// import logo from '../../../assets/img/branging-logo/easy-shop.png'
+import logo from '/assets/images/logo/logo.png'
 
 // Define menu items and submenus as an array of objects
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -167,18 +167,17 @@ export default function SideBar({ isSideBarOpen }) {
         </div>
       ) : (
         <div className="sideBarOpenCollapse ">
-          <div className="pt-2 ">
+          <div className="pt-3 pb-1 px-5">
             <Link to={'/dashboard'}>
-              {/* <img src={logo} alt="" className="w-[150px] mx-auto" /> */}
-              <h1 className="text-white mt-6 ml-7">Shah Alam Furniture</h1>
+              <img src={logo} alt="logo" className="object-contain h-full w-full" />
             </Link>
           </div>
-          <div className="pt-4">
+          <div>
             <ul className="flex flex-col gap-2">
               <li>
                 <NavLink
                   to="/dashboard"
-                  className="flex items-center gap-3 mt-10 px-8 py-2 text-white  hover:bg-gray-100  hover:text-gray-700"
+                  className="flex items-center gap-3 mt-2 px-8 py-2 text-white  hover:bg-gray-100  hover:text-gray-700"
                 >
                   <span>
                     <GoHome />
@@ -626,7 +625,10 @@ export default function SideBar({ isSideBarOpen }) {
 
               {/* Customer */}
               <li>
-                <details open={true} className="group [&_summary::-webkit-details-marker]:hidden">
+                <details
+                  open={true}
+                  className="group [&_summary::-webkit-details-marker]:hidden"
+                >
                   <summary className="flex gap-3 cursor-pointer items-center  mb-1 px-8 py-2 text-white hover:bg-gray-100 hover:text-gray-700 ">
                     <span>
                       <FaUserFriends />

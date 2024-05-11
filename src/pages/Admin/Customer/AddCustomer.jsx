@@ -53,7 +53,7 @@ export default function AddCustomer() {
       formData.append('price', data.price)
       formData.append('payment_price', data.payment_price)
       formData.append('delivery_date', data.delivery_date)
-      formData.append('reference_name', data.reference_name)
+      formData.append('reference_name', data.reference_name ? data.reference_name : "")
 
       const due = Number(data.price) - Number(data.payment_price)
 
@@ -63,6 +63,8 @@ export default function AddCustomer() {
       for (let i = 0; i < data.images.length; i++) {
         formData.append('images[]', data.images[i])
       }
+      console.log(data.reference_name)
+
 
       const res = await addCustomer(formData)
       if (res?.data?.status === 200) {
@@ -130,18 +132,11 @@ export default function AddCustomer() {
                   name="reference_name"
                   placeholder="Enter Reference Name"
                   className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                  {...register('reference_name', {
-                    required: 'Reference Name is required!',
-                  })}
+                  {...register('reference_name')}
                 />
-                {errors.reference_name && (
-                  <span className="text-red-500">
-                    {errors.reference_name?.message}
-                  </span>
-                )}
               </div>
             </div>
-            
+
             <div className="mb-4 flex gap-4">
               <div className="flex-1">
                 <label
@@ -192,16 +187,14 @@ export default function AddCustomer() {
                   htmlFor="delivery_date"
                   className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
                 >
-                  Delivery Date
+                  Delivery Date(Optional)
                 </label>
                 <input
                   className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
                   type="date"
                   name="delivery_date"
                   id="delivery_date"
-                  {...register('delivery_date', {
-                    required: 'Delivery date must be provide',
-                  })}
+                  {...register('delivery_date')}
                 />
               </div>
             </div>
@@ -235,13 +228,13 @@ export default function AddCustomer() {
                   htmlFor="file"
                   className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
                 >
-                  Images
+                  Images (Optional)
                 </label>
                 <input
                   type="file"
                   className={`w-full text-sm border file:cursor-pointer cursor-pointer file:border-0 file:py-2 file:px-4 file:mr-4  rounded focus:outline-none  focus:border-primaryColor ${isDarkMode ? 'bg-darkColorCard file:bg-primaryColor border-primaryColor text-lightColor file:text-black ' : 'bg-lightColor hover:border-primaryColor/50 file:text-white file:bg-primaryColor file:hover:bg-primaryColor/90 border-primaryColor/30 text-black'}`}
                   onChange={handleFileChange}
-                  {...register('images', { required: 'Please select file(s)' })}
+                  {...register('images')}
                   multiple
                 />
                 <div className="mt-4 flex items-center  relative ">
@@ -260,9 +253,6 @@ export default function AddCustomer() {
                   ))}
                 </div>
               </div>
-              {errors.images && (
-                <span className="text-red-500">{errors.images?.message}</span>
-              )}
             </div>
           </div>
         </div>
@@ -306,7 +296,7 @@ export default function AddCustomer() {
                       className={`block text-sm font-medium ${isDarkMode ? 'text-darkColorText' : 'text-gray-700'}`}
                       htmlFor="location"
                     >
-                      Location
+                      Location(optional)
                     </label>
                     <input
                       type="text"
@@ -314,15 +304,8 @@ export default function AddCustomer() {
                       name="location"
                       placeholder="Enter Location"
                       className={`form-control mt-1 p-3  border block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-primaryColor  ${isDarkMode ? 'bg-darkColorCard border-darkColorBody text-darkColorText ' : 'bg-lightColor hover:border-gray-400'}`}
-                      {...register('location', {
-                        required: 'Location is requied!',
-                      })}
+                      {...register('location')}
                     />
-                    {errors.location && (
-                      <span className="text-red-500">
-                        {errors.location?.message}
-                      </span>
-                    )}
                   </div>
                 </div>
                 <div className="mb-4 flex gap-4">
